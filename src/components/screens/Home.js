@@ -10,6 +10,8 @@ import {
   Dimensions,
   StatusBar,
   FlatList,
+  SafeAreaView,
+  Platform,
 } from 'react-native';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import Icon from 'react-native-vector-icons/AntDesign';
@@ -209,38 +211,9 @@ export default function Home({navigation}) {
     }
   };
 
-  // merging data
-  // const [allData, setAllData] = useState([1, 2, 3, 4]);
-  // const data = [
-  //   allData.flatMap((item, index) => [
-  //     {type: 'dummyData', data: item},
-  //     ...(index === 0 ? [{type: 'recentlyPlayed', data: recentlyPlayed}] : []),
-  //     ...(index === 1 ? [{type: 'newSongs', data: newSongs}] : []),
-  //   ]),
-  // ];
-
-  // const renderItem = ({item, index}) => {
-  //   if (item.type === 'recentlyPlayed') {
-  //     return <AlbumCard data={item?.data} />;
-  //   }
-  // };
-
-  // if (
-  //   recentlyPlayed?.length < 1 ||
-  //   newSongs?.length < 1 ||
-  //   featured?.length < 1
-  // ) {
-  // return <ShimmerExample />;
-  // }
-
   return (
-    <View style={styles.container}>
-      <StatusBar
-        translucent={false}
-        backgroundColor={colors.light_dark}
-        animated={true}
-        showHideTransition={'fade'}
-      />
+    <SafeAreaView style={[styles.container]}>
+      <StatusBar translucent={false} backgroundColor={colors.light_dark} />
       <View style={styles.header}>
         <View style={styles.innerContainer}>
           <Image
@@ -265,70 +238,72 @@ export default function Home({navigation}) {
           <FontAwesome5 name={'sign-in'} color={'#fff'} size={20} />
         </TouchableOpacity>
       </View>
-      <ScrollView
-        contentContainerStyle={{paddingBottom: isPlaying ? 130 : 70}}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }>
-        {recentlyPlayed?.length < 1 ? (
-          <RecentShimmer />
-        ) : (
-          <AlbumCard
-            title={'Recently Played'}
-            subtitle={'See All'}
-            navigation={navigation}
-            data={recentlyPlayed}
-            bottomRef={bottomRef}
-          />
-        )}
-        {newSongs?.length < 1 ? (
-          <RecentShimmer />
-        ) : (
-          <NewSongCard
-            navigation={navigation}
-            title={'New Song'}
-            subtitle={'See All'}
-            data={newSongs}
-          />
-        )}
-        {favorite?.length < 1 ? (
-          <RecentShimmer />
-        ) : (
-          <FavoriteAlbum
-            navigation={navigation}
-            title={'Favorite Songs'}
-            subtitle={'See All'}
-            data={favorite}
-          />
-        )}
-        {featured?.length < 1 ? (
-          <RecommendedShimmer />
-        ) : (
-          <Recommended
-            title={'Recommended For You'}
-            data={featured}
-            navigation={navigation}
-          />
-        )}
-        {artists?.length < 1 ? (
-          <ArtistShimmer />
-        ) : (
-          <View>
-            <View style={styles.artistHeader}>
-              <Text style={styles.headerTitle} onPress={fetchArtists}>
-                Artists
-              </Text>
-              <TouchableOpacity
-                style={styles.seeAll}
-                onPress={() => navigation.navigate('AllArtist')}>
-                <Text style={styles.headerSubtitle}>See All</Text>
-                <Icon name="arrowright" color={colors.light_text} size={20} />
-              </TouchableOpacity>
+      <View style={{flex: 1}}>
+        <ScrollView
+          contentContainerStyle={{paddingBottom: isPlaying ? 130 : 70}}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }>
+          {recentlyPlayed?.length < 1 ? (
+            <RecentShimmer />
+          ) : (
+            <AlbumCard
+              title={'Recently Played'}
+              subtitle={'See All'}
+              navigation={navigation}
+              data={recentlyPlayed}
+              bottomRef={bottomRef}
+            />
+          )}
+          {newSongs?.length < 1 ? (
+            <RecentShimmer />
+          ) : (
+            <NewSongCard
+              navigation={navigation}
+              title={'New Song'}
+              subtitle={'See All'}
+              data={newSongs}
+            />
+          )}
+          {favorite?.length < 1 ? (
+            <RecentShimmer />
+          ) : (
+            <FavoriteAlbum
+              navigation={navigation}
+              title={'Favorite Songs'}
+              subtitle={'See All'}
+              data={favorite}
+            />
+          )}
+          {featured?.length < 1 ? (
+            <RecommendedShimmer />
+          ) : (
+            <Recommended
+              title={'Recommended For You'}
+              data={featured}
+              navigation={navigation}
+            />
+          )}
+          {artists?.length < 1 ? (
+            <ArtistShimmer />
+          ) : (
+            <View>
+              <View style={styles.artistHeader}>
+                <Text style={styles.headerTitle} onPress={fetchArtists}>
+                  Artists
+                </Text>
+                <TouchableOpacity
+                  style={styles.seeAll}
+                  onPress={() => navigation.navigate('AllArtist')}>
+                  <Text style={styles.headerSubtitle}>See All</Text>
+                  <Icon name="arrowright" color={colors.light_text} size={20} />
+                </TouchableOpacity>
+              </View>
+              <Artist data={artists} navigation={navigation} />
             </View>
-            <Artist data={artists} navigation={navigation} />
-          </View>
-        )}
-      </ScrollView>
+          )}
+        </ScrollView>
+      </View>
       {isPlaying && (
         <Playing
           artist={artistName}
@@ -341,13 +316,14 @@ export default function Home({navigation}) {
         />
       )}
       <BottomComponent bottomRef={bottomRef} item={items} />
-    </View>
+    </SafeAreaView>
   );
 }
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.light_dark,
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 20,
   },
   header: {
     paddingHorizontal: 14,

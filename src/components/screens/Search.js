@@ -186,6 +186,7 @@ export default function Search({navigation}) {
       </View>
       <ScrollView
         showsVerticalScrollIndicator={false}
+        removeClippedSubviews={false}
         contentContainerStyle={{paddingBottom: 60}}>
         <View>
           <Text style={styles.title}>Top genres</Text>
@@ -256,6 +257,7 @@ export default function Search({navigation}) {
               <FlatList
                 data={searchResults}
                 keyExtractor={(item, index) => index.toString()}
+                removeClippedSubviews={false}
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{paddingBottom: 60}}
                 renderItem={({item, index}) => {
@@ -266,7 +268,7 @@ export default function Search({navigation}) {
                       key={index}
                       onPress={() => {
                         playSong(item);
-                        console.log(console.log(item));
+                        // console.log(console.log(item));
                       }}>
                       <Image
                         source={{uri: item?.album?.images[0]?.url}}

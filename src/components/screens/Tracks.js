@@ -12,8 +12,9 @@ import {Track} from '../custom/Track';
 import {PlayingContext} from '../context/PlayingContext';
 import {font} from '../constants/font';
 import {colors} from '../constants/color';
+import IconBtn from '../custom/IconBtn';
 
-export default function Tracks({route}) {
+export default function Tracks({route, navigation}) {
   const [tracks, setTracks] = useState([]);
   const {item} = route.params;
   const {id} = item?.album;
@@ -55,14 +56,21 @@ export default function Tracks({route}) {
   }, []);
 
   return (
-    <View style={{flex: 1, paddingTop: 10}}>
+    <View style={{flex: 1}}>
       <StatusBar
         translucent={false}
         backgroundColor={colors.light_dark}
-        animated={true}
         showHideTransition={'fade'}
       />
-      <Text style={styles.tracks}>Tracks</Text>
+      <View style={styles.header}>
+        <IconBtn
+          icon={'arrow-back'}
+          size={20}
+          color={colors.light}
+          onPress={() => navigation.goBack()}
+        />
+        <Text style={styles.tracks}>Tracks</Text>
+      </View>
       {tracks.length < 1 ? (
         <View
           style={{
@@ -79,6 +87,7 @@ export default function Tracks({route}) {
       ) : (
         <FlatList
           data={tracks}
+          removeClippedSubviews={false}
           contentContainerStyle={{paddingBottom: 60}}
           renderItem={({item, index}) => {
             // console.log('track items are ', item);
@@ -96,8 +105,10 @@ const styles = StyleSheet.create({
   tracks: {
     color: 'white',
     fontSize: 20,
-    paddingLeft: 14,
-    marginVertical: 10,
     fontFamily: font.Montserrat_SemiBold,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });

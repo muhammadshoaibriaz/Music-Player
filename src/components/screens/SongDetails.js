@@ -8,6 +8,7 @@ import {
   Dimensions,
   Pressable,
   Animated,
+  StatusBar,
 } from 'react-native';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
@@ -51,7 +52,7 @@ export default function SongDetails({route, navigation}) {
     setTracks(data?.items);
   };
 
-  const {playingTitle, artistName, playingImage, backgroundColor} =
+  const {playingTitle, artistName, playingImage, backgroundColor, isPlaying} =
     useContext(PlayingContext);
   console.log('SongDetails component render');
   const scrollY = useRef(new Animated.Value(0)).current;
@@ -61,11 +62,12 @@ export default function SongDetails({route, navigation}) {
   });
   return (
     <View style={{flex: 1}}>
+      <StatusBar translucent={false} backgroundColor={backgroundColor} />
       <IconBtn
         icon="arrow-back"
         size={20}
         color="white"
-        style={{position: 'absolute', zIndex: 11, top: 40}}
+        style={{position: 'absolute', zIndex: 11}}
         onPress={() => navigation.goBack()}
       />
       <View style={{flex: 1}}>
@@ -78,14 +80,15 @@ export default function SongDetails({route, navigation}) {
             />
           </View>
         ) : (
-          <FlatList
+          <Animated.FlatList
             data={tracks}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{paddingBottom: 80}}
+            removeClippedSubviews={false}
             keyExtractor={(item, index) => index.toString()}
             onScroll={Animated.event(
               [{nativeEvent: {contentOffset: {y: scrollY}}}],
-              {useNativeDriver: false},
+              {useNativeDriver: true},
             )}
             ListHeaderComponent={
               <View
@@ -207,7 +210,7 @@ export default function SongDetails({route, navigation}) {
           />
         )}
       </View>
-      {tracks?.length > 0 && (
+      {isPlaying && (
         <Playing
           title={playingTitle}
           artist={artistName}
@@ -229,7 +232,7 @@ const styles = StyleSheet.create({
   },
   imageWrapper: {
     width: '100%',
-    height: 450,
+    height: 350,
     position: 'relative',
     alignItems: 'center',
     justifyContent: 'center',

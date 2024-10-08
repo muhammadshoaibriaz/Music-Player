@@ -5,6 +5,8 @@ import {Track} from '../custom/Track';
 import {PlayingContext} from '../context/PlayingContext';
 import {Track1} from '../custom/Track1';
 import {font} from '../constants/font';
+import IconBtn from '../custom/IconBtn';
+import {colors} from '../constants/color';
 
 export default function BrowseTrack({route, navigation}) {
   const [tracks, setTracks] = useState([]);
@@ -50,10 +52,20 @@ export default function BrowseTrack({route, navigation}) {
   }, []);
 
   return (
-    <View style={{flex: 1, paddingTop: 10}}>
-      <Text style={styles.tracks}>Tracks</Text>
+    <View style={{flex: 1}}>
+      <View style={styles.header}>
+        <IconBtn
+          icon={'arrow-back'}
+          size={20}
+          color={colors.light}
+          onPress={() => navigation.goBack()}
+        />
+        <Text style={styles.tracks}>Tracks</Text>
+      </View>
       <FlatList
         data={tracks}
+        removeClippedSubviews={false}
+        keyExtractor={(item, index) => index.toString()}
         contentContainerStyle={{paddingBottom: 70}}
         renderItem={({item, index}) => {
           // console.log('track items are ', item);
@@ -74,9 +86,12 @@ export default function BrowseTrack({route, navigation}) {
 const styles = StyleSheet.create({
   tracks: {
     color: 'white',
-    fontSize: 20,
-    marginLeft: 14,
-    marginBottom: 10,
+    fontSize: 16,
     fontFamily: font.Montserrat_SemiBold,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    // paddingVertical: 6,
   },
 });

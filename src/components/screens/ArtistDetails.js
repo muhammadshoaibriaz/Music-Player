@@ -77,7 +77,6 @@ export default function ArtistDetails({route, navigation}) {
         backgroundColor={'#00000060'}
         translucent={true}
       />
-
       <Animated.View style={[styles.icon, {backgroundColor: backgroundColor}]}>
         <IonIcons
           name={'arrow-back'}
@@ -88,7 +87,7 @@ export default function ArtistDetails({route, navigation}) {
       </Animated.View>
       <View style={{flex: 1}}>
         {tracks?.length < 1 ? (
-          <View style={[styles.activityIndicator, {width: 300, height: 400}]}>
+          <View style={[styles.activityIndicator, {height: 400}]}>
             <ActivityIndicator
               style={{bottom: 40}}
               size={30}
@@ -99,6 +98,7 @@ export default function ArtistDetails({route, navigation}) {
           <Animated.FlatList
             bounces={false}
             data={tracks}
+            removeClippedSubviews={false}
             onScroll={Animated.event(
               [{nativeEvent: {contentOffset: {y: scrollY}}}],
               {useNativeDriver: false},
@@ -175,10 +175,11 @@ export default function ArtistDetails({route, navigation}) {
                     data={artists}
                     horizontal
                     contentContainerStyle={{paddingLeft: 14}}
+                    removeClippedSubviews={false}
                     showsHorizontalScrollIndicator={false}
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={({item, index}) => {
-                      console.log('Artist is', item);
+                      // console.log('Artist is', item);
                       return (
                         <TouchableOpacity
                           activeOpacity={0.5}

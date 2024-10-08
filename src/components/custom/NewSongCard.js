@@ -20,7 +20,7 @@ const SPACING = 14;
 export default function NewSongCard({title, subtitle, data, navigation}) {
   // console.log(data);
   return (
-    <View style={{marginTop: 10}}>
+    <View style={{paddingTop: 10}}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>{title}</Text>
         <TouchableOpacity style={styles.seeAll} onPress={() => {}}>
@@ -32,6 +32,7 @@ export default function NewSongCard({title, subtitle, data, navigation}) {
         data={data}
         horizontal
         keyExtractor={(item, index) => index.toString()}
+        removeClippedSubviews={true}
         nestedScrollEnabled={true}
         contentContainerStyle={{
           paddingLeft: 14,

@@ -1,7 +1,7 @@
 import LinearGradient from 'react-native-linear-gradient';
 import {Text} from 'react-native';
 import {StyleSheet, TouchableOpacity, View, Keyboard} from 'react-native';
-import AntDesign from 'react-native-vector-icons/Ionicons';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import {font} from '../constants/font';
 import {useState, useEffect} from 'react';
 export default function CustomTabBar({state, descriptors, navigation}) {
@@ -29,7 +29,7 @@ export default function CustomTabBar({state, descriptors, navigation}) {
   }, []);
 
   if (isKeyboardVisible) {
-    return null; // Hide tab bar when keyboard is visible
+    return null;
   }
 
   return (
@@ -56,7 +56,6 @@ export default function CustomTabBar({state, descriptors, navigation}) {
               }
             };
 
-            // Assign icons based on the route name
             let iconName;
             if (route.name === 'Home ') {
               iconName = isFocused ? 'home' : 'home-outline';
@@ -73,7 +72,7 @@ export default function CustomTabBar({state, descriptors, navigation}) {
                 key={route.key}
                 onPress={onPress}
                 style={styles.tabItem}>
-                <AntDesign
+                <Ionicons
                   name={iconName}
                   size={22}
                   color={isFocused ? '#fff' : '#aaa'}

@@ -14,7 +14,7 @@ import {useCallback, useContext, useRef} from 'react';
 import {PlayingContext} from '../context/PlayingContext';
 
 export const Track1 = ({item, onPress, onIconPress}) => {
-  console.log('track item data is ', item?.track);
+  // console.log('track item data is ', item?.track);
   // item?.track?.artists.map(item => console.log(item?.name));
 
   const scale = useRef(new Animated.Value(1)).current;

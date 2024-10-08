@@ -207,6 +207,7 @@ export default function FavPlayList({route, navigation}) {
             <Animated.FlatList
               ref={scrollY}
               data={tracks}
+              removeClippedSubviews={false}
               keyExtractor={(item, index) => index.toString()}
               onScroll={Animated.event(
                 [{nativeEvent: {contentOffset: {y: scrollY}}}],

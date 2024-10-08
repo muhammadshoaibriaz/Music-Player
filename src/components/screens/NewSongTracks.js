@@ -5,8 +5,9 @@ import {Track} from '../custom/Track';
 import {PlayingContext} from '../context/PlayingContext';
 import {font} from '../constants/font';
 import {colors} from '../constants/color';
+import IconBtn from '../custom/IconBtn';
 
-export default function NewSongTracks({route}) {
+export default function NewSongTracks({route, navigation}) {
   const [tracks, setTracks] = useState([]);
   const {item} = route.params;
   const {id} = item;
@@ -48,9 +49,18 @@ export default function NewSongTracks({route}) {
   return (
     <View style={{flex: 1}}>
       <StatusBar translucent={false} backgroundColor={colors.light_dark} />
-      <Text style={styles.tracks}>Tracks</Text>
+      <View style={styles.header}>
+        <IconBtn
+          icon={'arrow-back'}
+          size={20}
+          color={colors.light}
+          onPress={() => navigation.goBack()}
+        />
+        <Text style={styles.tracks}>Tracks</Text>
+      </View>
       <FlatList
         data={tracks}
+        removeClippedSubviews={false}
         contentContainerStyle={{paddingBottom: 60}}
         renderItem={({item, index}) => {
           // console.log('track items are ', item);
@@ -71,9 +81,10 @@ export default function NewSongTracks({route}) {
 const styles = StyleSheet.create({
   tracks: {
     color: 'white',
-    fontSize: 24,
-    marginLeft: 14,
+    fontSize: 16,
+    marginLeft: 8,
     fontFamily: font.Montserrat_SemiBold,
     marginVertical: 10,
   },
+  header: {flexDirection: 'row', alignItems: 'center'},
 });

@@ -47,30 +47,6 @@ export default function SearchPlayList({route, navigation}) {
   console.log('SearchPlayList component render');
   return (
     <View style={{flex: 1}}>
-      <View style={styles.imageWrapper}>
-        <IconBtn
-          icon="arrow-back"
-          size={24}
-          color="white"
-          style={{position: 'absolute', zIndex: 11}}
-          onPress={() => navigation.goBack()}
-        />
-        <LinearGradient
-          style={[styles.imageWrapper, {position: 'absolute', zIndex: 1}]}
-          colors={['transparent', colors.light_dark]}></LinearGradient>
-        <Animated.Image
-          source={{uri: item?.icons[0]?.url}}
-          style={styles.artistImage}
-        />
-        <View style={styles.details}>
-          <Text numberOfLines={2} style={styles.artistName}>
-            {item?.name}
-          </Text>
-          <Text numberOfLines={2} style={styles.description}>
-            Total tracks: {playlists && playlists?.length}
-          </Text>
-        </View>
-      </View>
       <View style={{flex: 1}}>
         {playlists.length < 1 ? (
           <View style={styles.activityIndicator}>
@@ -83,9 +59,39 @@ export default function SearchPlayList({route, navigation}) {
         ) : (
           <FlatList
             data={playlists}
+            removeClippedSubviews={false}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{paddingBottom: 80}}
             keyExtractor={(item, index) => index.toString()}
+            ListHeaderComponent={
+              <View style={styles.imageWrapper}>
+                <IconBtn
+                  icon="arrow-back"
+                  size={24}
+                  color="white"
+                  style={{position: 'absolute', zIndex: 11}}
+                  onPress={() => navigation.goBack()}
+                />
+                <LinearGradient
+                  style={[
+                    styles.imageWrapper,
+                    {position: 'absolute', zIndex: 1},
+                  ]}
+                  colors={['transparent', colors.light_dark]}></LinearGradient>
+                <Animated.Image
+                  source={{uri: item?.icons[0]?.url}}
+                  style={styles.artistImage}
+                />
+                <View style={styles.details}>
+                  <Text numberOfLines={2} style={styles.artistName}>
+                    {item?.name}
+                  </Text>
+                  <Text numberOfLines={2} style={styles.description}>
+                    Total tracks: {playlists && playlists?.length}
+                  </Text>
+                </View>
+              </View>
+            }
             renderItem={({item, index}) => {
               // console.log('item is ', item);
               return (

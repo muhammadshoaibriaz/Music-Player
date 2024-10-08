@@ -11,6 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {GenresTrack} from '../custom/GenresTrack';
 import {font} from '../constants/font';
 import {colors} from '../constants/color';
+import IconBtn from '../custom/IconBtn';
 
 export default function Genres({route, navigation}) {
   const {item} = route.params;
@@ -48,13 +49,16 @@ export default function Genres({route, navigation}) {
   console.log('Genres component render');
   return (
     <View style={styles.container}>
-      <StatusBar
-        translucent={false}
-        backgroundColor={colors.light_dark}
-        animated={true}
-        showHideTransition={'fade'}
-      />
-      <Text style={styles.name}>{item?.name}</Text>
+      <StatusBar translucent={false} backgroundColor={colors.light_dark} />
+      <View style={styles.header}>
+        <IconBtn
+          icon={'arrow-back'}
+          size={20}
+          color={colors.light}
+          onPress={() => navigation.goBack()}
+        />
+        <Text style={styles.name}>{item?.name}</Text>
+      </View>
       {/* <View style={{flex: 1}}> */}
       {genresData.length < 1 ? (
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -67,7 +71,9 @@ export default function Genres({route, navigation}) {
       ) : (
         <FlatList
           data={genresData}
+          removeClippedSubviews={false}
           showsVerticalScrollIndicator={false}
+          keyExtractor={(item, index) => index.toString()}
           contentContainerStyle={{paddingBottom: 130}}
           renderItem={({item, index}) => {
             return (
@@ -86,13 +92,16 @@ export default function Genres({route, navigation}) {
 
 const styles = StyleSheet.create({
   name: {
-    fontSize: 20,
+    fontSize: 16,
     color: '#fff',
     fontFamily: font.Montserrat_SemiBold,
-    marginVertical: 10,
   },
   container: {
     paddingHorizontal: 14,
     flex: 1,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });

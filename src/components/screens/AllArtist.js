@@ -259,6 +259,7 @@ export default function AllArtist({navigation}) {
       <FlatList
         data={artist}
         keyExtractor={(item, index) => index.toString()}
+        removeClippedSubviews={true}
         contentContainerStyle={{
           paddingHorizontal: 14,
         }}

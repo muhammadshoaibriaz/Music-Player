@@ -1,11 +1,4 @@
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  StatusBar,
-  ImageBackground,
-} from 'react-native';
+import {View, StyleSheet, StatusBar, ImageBackground} from 'react-native';
 import React from 'react';
 import {font} from '../constants/font';
 import * as Animatable from 'react-native-animatable';
@@ -13,7 +6,6 @@ import {colors} from '../constants/color';
 import LinearGradient from 'react-native-linear-gradient';
 
 export default function Splash() {
-  console.log('Splash component render');
   return (
     <LinearGradient
       style={[StyleSheet.absoluteFillObject, {zIndex: -1}]}

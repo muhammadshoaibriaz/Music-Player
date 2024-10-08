@@ -209,6 +209,7 @@ export default function PlayList({route, navigation}) {
             <Animated.FlatList
               ref={scrollY}
               data={tracks}
+              removeClippedSubviews={false}
               keyExtractor={(item, index) => index.toString()}
               onScroll={Animated.event(
                 [{nativeEvent: {contentOffset: {y: scrollY}}}],
@@ -349,6 +350,7 @@ export default function PlayList({route, navigation}) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: colors.light_dark,
   },
   artistImage: {
     width: '100%',
@@ -384,6 +386,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    backgroundColor: colors.light_dark,
   },
   playing: {
     fontSize: 16,

@@ -8,13 +8,14 @@ import {
 import {screen} from '../custom/screens';
 import Splash from '../screens/Splash';
 import {createStackNavigator} from '@react-navigation/stack';
-// import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 // import {createSharedElementStackNavigator} from 'react-navigation-shared-element';
 import CustomTabBar from '../custom/CustomTabBar';
+import {colors} from '../constants/color';
 
 const Tab = createBottomTabNavigator();
-const Stack = createStackNavigator();
-// const Stack = createNativeStackNavigator();
+// const Stack = createStackNavigator();
+const Stack = createNativeStackNavigator();
 // const Stack = createSharedElementStackNavigator();
 
 const getFocusedRouteName = route => {
@@ -31,8 +32,8 @@ const HomeStack = () => {
       initialRouteName="Home"
       screenOptions={{
         headerShown: false,
-        cardStyle: {backgroundColor: '#111'},
-        animationTypeForReplace: '',
+        contentStyle: {backgroundColor: colors.light_dark},
+        animation: 'slide_from_right',
         animationEnabled: true,
       }}>
       <Stack.Screen name="Home" component={screen.Home} />
@@ -52,7 +53,8 @@ const SearchStack = () => {
       initialRouteName="Search"
       screenOptions={{
         headerShown: false,
-        cardStyle: {backgroundColor: '#111'},
+        animation: 'slide_from_right',
+        contentStyle: {backgroundColor: colors.light_dark},
       }}>
       <Stack.Screen name="Search" component={screen.Search} />
       <Stack.Screen name="SearchPlayList" component={screen.SearchPlayList} />
@@ -66,9 +68,12 @@ const SearchStack = () => {
 const FavoriteStack = () => {
   return (
     <Stack.Navigator
-      initialRouteName="Favorite "
-      screenOptions={{headerShown: false}}>
-      <Stack.Screen name="Favorite s" component={screen.Favorite} />
+      initialRouteName="Favorites"
+      screenOptions={{
+        headerShown: false,
+        contentStyle: {backgroundColor: colors.light_dark},
+      }}>
+      <Stack.Screen name="Favorites" component={screen.Favorite} />
       <Stack.Screen name="FavPlayList" component={screen.FavPlayList} />
     </Stack.Navigator>
   );
@@ -90,6 +95,7 @@ const AppNavigator = () => {
   return (
     <NavigationContainer>
       <Tab.Navigator
+        detachInactiveScreens={false}
         initialRouteName="Home "
         screenOptions={{
           tabBarHideOnKeyboard: true,

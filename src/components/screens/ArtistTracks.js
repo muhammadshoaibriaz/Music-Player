@@ -7,6 +7,7 @@ import {PlayingContext} from '../context/PlayingContext';
 import {colors} from '../constants/color';
 import {font} from '../constants/font';
 import * as Animatable from 'react-native-animatable';
+import IconBtn from '../custom/IconBtn';
 
 export default function ArtistTracks({route, navigation}) {
   const {item} = route.params;
@@ -41,16 +42,25 @@ export default function ArtistTracks({route, navigation}) {
     }
   }, []);
   return (
-    <View style={{flex: 1, paddingTop: 10}}>
+    <View style={{flex: 1, paddingTop: 30}}>
       <StatusBar
         animated={true}
         showHideTransition={'fade'}
-        translucent={false}
+        translucent={true}
         backgroundColor={colors.light_dark}
       />
-      <Text style={styles.tracks}>Tracks</Text>
+      <View style={styles.header}>
+        <IconBtn
+          size={24}
+          icon={'arrow-back'}
+          onPress={() => navigation.goBack()}
+          color={colors.light}
+        />
+        <Text style={styles.tracks}>Tracks</Text>
+      </View>
       <FlatList
         data={tracks}
+        removeClippedSubviews={false}
         contentContainerStyle={{paddingBottom: 120}}
         renderItem={({item, index}) => {
           return (
@@ -74,5 +84,9 @@ const styles = StyleSheet.create({
     paddingLeft: 14,
     fontFamily: font.Montserrat_SemiBold,
     paddingVertical: 6,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });
