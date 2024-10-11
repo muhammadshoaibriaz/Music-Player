@@ -58,7 +58,20 @@ export default function Home({navigation}) {
   const time = new Date();
   const current_time = time.getHours();
 
+  // States
+  const [userProfile, setUserProfile] = useState(null);
+  const [recentlyPlayed, setRecentlyPlayed] = useState([]);
+  // const [favorite, setFavorite] = useState([]);
+  // const [featured, setFeatured] = useState([]);
+  // const [artists, setArtists] = useState([]);
+  // const [newSongs, setNewSongs] = useState([]);
+  // mood Data
+  const [artists1, setArtists1] = useState([]);
+  const [albums, setAlbums] = useState([]);
+  const [playlist, setPlaylist] = useState([]);
+  const [tracks, setTracks] = useState([]);
   const [userMood, setUserMood] = useState('');
+
   useEffect(() => {
     const getUserMood = async () => {
       try {
@@ -69,21 +82,8 @@ export default function Home({navigation}) {
       }
     };
     getUserMood();
-  }, []);
+  }, [userMood]);
   console.log('mood from home is ', userMood);
-
-  // States
-  const [userProfile, setUserProfile] = useState(null);
-  const [recentlyPlayed, setRecentlyPlayed] = useState([]);
-  const [favorite, setFavorite] = useState([]);
-  const [featured, setFeatured] = useState([]);
-  const [artists, setArtists] = useState([]);
-  const [newSongs, setNewSongs] = useState([]);
-  // mood Data
-  const [artists1, setArtists1] = useState([]);
-  const [albums, setAlbums] = useState([]);
-  const [playlist, setPlaylist] = useState([]);
-  const [tracks, setTracks] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -170,13 +170,13 @@ export default function Home({navigation}) {
         },
       );
       const data = await response.json();
-      console.log('Search response is ', data);
+      // console.log('Search response is ', data);
       // setPlaylist(JSON.stringify(data?.playlists));
       setPlaylist(data?.playlists?.items);
       setAlbums(data?.albums?.items);
       setArtists1(data?.artists?.items);
       setTracks(data?.tracks?.items);
-      console.log('playlist is ', data?.playlists?.items);
+      // console.log('playlist is ', data?.playlists?.items);
     } catch (error) {
       console.log('Error while', error);
     }

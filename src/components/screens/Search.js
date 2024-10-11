@@ -25,14 +25,10 @@ import {font} from '../constants/font';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {SearchBar} from '../custom/SearchBar';
 import SoundPlayer from 'react-native-sound-player';
-import {debounce} from 'lodash';
 import {PlayingContext} from '../context/PlayingContext';
-import BottomSheet from 'react-native-raw-bottom-sheet';
 const {width, height} = Dimensions.get('screen');
-import {Dialog} from 'react-native-elements';
 
 export default function Search({navigation}) {
-  const bottomRef = useRef();
   const [query, setQuery] = useState('');
   const [categories, setCategories] = useState([]);
   const [searchResults, setSearchResults] = useState([]);
@@ -138,7 +134,7 @@ export default function Search({navigation}) {
       );
       const data = await response.json();
       setSearchResults(data?.tracks?.items);
-      console.log('query data is ', data);
+      // console.log('query data is ', data);
     } catch (error) {
       console.log('Error while fetching songs', error);
     } finally {
@@ -192,7 +188,7 @@ export default function Search({navigation}) {
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{paddingBottom: 60}}
             renderItem={({item, index}) => {
-              // console.log('item is ', item);
+              console.log('item is ', item);
               return (
                 <TouchableOpacity
                   style={styles.track}

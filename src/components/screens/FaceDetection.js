@@ -3,11 +3,10 @@ import {
   View,
   Text,
   Image,
-  ScrollView,
   StyleSheet,
   StatusBar,
   TouchableOpacity,
-  ActivityIndicator, // Import ActivityIndicator
+  ActivityIndicator,
 } from 'react-native';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import faceDetection from '@react-native-ml-kit/face-detection';
@@ -89,6 +88,13 @@ const FaceDetection = ({navigation}) => {
   };
 
   const detectFace = async imageUri => {
+    setAlbums([]);
+    setArtists([]);
+    setPlaylist([]);
+    setTracks([]);
+    console.log('albums empty ', albums);
+    console.log('playlist empty ', playlist);
+    console.log('tracks empty ', tracks);
     try {
       const faces = await faceDetection.detect(imageUri, {
         contourMode: 'all',
@@ -101,6 +107,7 @@ const FaceDetection = ({navigation}) => {
         const face = faces[0];
         setFaceData(face);
         determineMood(face);
+        setLoading(false);
       } else {
         setFaceData(null);
         setMood('');
@@ -111,6 +118,7 @@ const FaceDetection = ({navigation}) => {
   };
 
   const determineMood = async face => {
+    setLoading(true);
     const smilingProbability = face.smilingProbability ?? 0;
     const leftEyeOpenProbability = face.leftEyeOpenProbability ?? 0;
     const rightEyeOpenProbability = face.rightEyeOpenProbability ?? 0;
@@ -150,6 +158,7 @@ const FaceDetection = ({navigation}) => {
   const fetchResults = async () => {
     const token = await AsyncStorage.getItem('token');
     const mood = await AsyncStorage.getItem('userMood');
+
     try {
       setLoading(true);
       const response = await fetch(
@@ -169,6 +178,7 @@ const FaceDetection = ({navigation}) => {
       setAlbums(data?.albums?.items);
       setTracks(data?.tracks?.items);
       setArtists(data?.artists?.items);
+      setLoading(false);
     } catch (error) {
       console.log('Error while', error);
     } finally {

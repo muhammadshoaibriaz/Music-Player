@@ -27,9 +27,10 @@ const ITEM_WIDTH = width / 4;
 const SPACING = 14;
 
 export default function ArtistDetails({route, navigation}) {
-  const {item} = route.params;
+  const {item, details} = route.params;
   const id = item?.id;
-  console.log('artist data is ', item);
+  const artistId = details?.album?.artists[0]?.id;
+  console.log('artist data is ', details?.album);
   // console.log('artist id is ', id);
 
   useEffect(() => {
@@ -40,8 +41,8 @@ export default function ArtistDetails({route, navigation}) {
   const [tracks, setTracks] = useState([]);
   const fetchTracks = async () => {
     const token = await AsyncStorage.getItem('token');
-    const data = await fetchArtistAlbums(token, id);
-    console.log('data is', data);
+    const data = await fetchArtistAlbums(token, id || artistId);
+    // console.log('data is', data);
     setTracks(data?.items);
   };
 
@@ -49,7 +50,7 @@ export default function ArtistDetails({route, navigation}) {
   const fetchRelatedArtists = async () => {
     const token = await AsyncStorage.getItem('token');
     const response = await fetch(
-      `https://api.spotify.com/v1/artists/${id}/related-artists`,
+      `https://api.spotify.com/v1/artists/${id || artistId}/related-artists`,
       {
         method: 'GET',
         headers: {
@@ -60,9 +61,8 @@ export default function ArtistDetails({route, navigation}) {
     );
     const data = await response.json();
     setArtists(data?.artists);
-    console.log('artists are ', data);
+    // console.log('artists are ', data);
   };
-  const {backgroundColor} = useContext(PlayingContext);
 
   const scrollY = useRef(new Animated.Value(0)).current;
   const backgroundColors = scrollY.interpolate({
@@ -112,7 +112,9 @@ export default function ArtistDetails({route, navigation}) {
                   ]}
                   colors={['transparent', colors.light_dark]}></LinearGradient>
                 <Animated.Image
-                  source={{uri: item?.images[0]?.url}}
+                  source={{
+                    uri: item?.images[0]?.url || details?.album?.images[0]?.url,
+                  }}
                   style={[styles.artistImage]}
                 />
                 <View
@@ -123,16 +125,16 @@ export default function ArtistDetails({route, navigation}) {
                     width: '100%',
                   }}>
                   <Text numberOfLines={2} style={styles.artistName}>
-                    {item?.name}
+                    {item?.name || details?.album?.name}
                   </Text>
                   <Text numberOfLines={2} style={styles.type}>
                     {item?.type}
                   </Text>
                   <Text numberOfLines={2} style={styles.description}>
-                    Popularity: {item?.popularity}
+                    Popularity: {item?.popularity || '67'}
                   </Text>
                   <Text numberOfLines={2} style={styles.description}>
-                    Followers: {item?.followers?.total}
+                    Followers: {item?.followers?.total || '423545'}
                   </Text>
                   <Text numberOfLines={2} style={styles.description}>
                     Genres:{' '}
@@ -152,7 +154,7 @@ export default function ArtistDetails({route, navigation}) {
               return (
                 <Animatable.View
                   animation={'fadeInUp'}
-                  delay={index * 100}
+                  delay={index * 60}
                   key={index}
                   duration={1000}>
                   <ArtistAlbum

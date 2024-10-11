@@ -31,11 +31,12 @@ export const ArtistAlbum = ({item, onPress, style}) => {
         <Image source={{uri: item?.images[0].url}} style={[styles.image]} />
       </View>
       <View style={styles.details}>
-        <Text style={styles.albumName}>{item?.name}</Text>
+        <Text numberOfLines={3} style={styles.albumName}>
+          {item?.name}
+        </Text>
         <View
           style={{
             flexDirection: 'row',
-            // alignItems: 'center',
             marginTop: 4,
             width: '100%',
             overflow: 'hidden',

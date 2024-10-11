@@ -72,7 +72,7 @@ export default function PlayList({route, navigation}) {
     item => {
       // console.log('song is ', item?.track);
       playTrack1(item?.track);
-      getRandomColor();
+      // getRandomColor();
     },
     [playTrack1],
   );
@@ -314,7 +314,7 @@ export default function PlayList({route, navigation}) {
         closeOnPressBack={true}
         dragOnContent={true}
         draggable
-        height={400}
+        height={330}
         customStyles={{
           container: {
             borderTopLeftRadius: 14,
@@ -348,6 +348,7 @@ export default function PlayList({route, navigation}) {
           <View style={{marginTop: 10}}>
             <Button
               onPress={() => {
+                bottomRef1.current.close();
                 dispatch(addFavorite(details));
               }}
               icon={'heart-outline'}
@@ -355,19 +356,28 @@ export default function PlayList({route, navigation}) {
               color={isFavorite ? 'chocolate' : 'white'}
             />
             <Button
-              onPress={() => bottomRef1.current.close()}
+              onPress={() => {
+                bottomRef1.current.close();
+                navigation.navigate('ArtistDetails', {details});
+                console.log('item', details?.album?.artists[0]?.id);
+              }}
               icon={'person-circle-outline'}
               title={'View Artist'}
               color={colors.light}
             />
             <Button
-              onPress={() => setVisible(true)}
+              onPress={() => {
+                bottomRef1.current.close();
+                setVisible(true);
+              }}
               icon={'musical-notes-outline'}
               title={'Add to playlist'}
               color={colors.light}
             />
             <Button
-              onPress={() => bottomRef1.current.close()}
+              onPress={() => {
+                bottomRef1.current.close();
+              }}
               icon={'close-circle-outline'}
               title={'Cancel'}
               color={colors.light}
