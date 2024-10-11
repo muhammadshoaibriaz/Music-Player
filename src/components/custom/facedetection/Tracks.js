@@ -21,6 +21,7 @@ export const Tracks = ({data}) => {
       <FlatList
         data={data}
         showsVerticalScrollIndicator={false}
+        contentContainerStyle={{paddingHorizontal: 14}}
         removeClippedSubviews={false}
         renderItem={({item, index}) => {
           console.log('my data is is ', item);

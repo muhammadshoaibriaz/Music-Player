@@ -20,6 +20,7 @@ export const Artist = ({data, navigation}) => {
       <FlatList
         data={data}
         removeClippedSubviews={false}
+        contentContainerStyle={{paddingHorizontal: 14, paddingBottom: 40}}
         showsHorizontalScrollIndicator={false}
         renderItem={({item, index}) => {
           // console.log('Artist details are ', item?.id);

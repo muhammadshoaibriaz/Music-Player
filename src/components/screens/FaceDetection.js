@@ -14,8 +14,8 @@ import faceDetection from '@react-native-ml-kit/face-detection';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {colors} from '../constants/color';
 import {font} from '../constants/font';
-import {PlayList} from '../custom/facedetection/Playlist';
 import {Artist} from '../custom/facedetection/Artist';
+import {PlayList} from '../custom/facedetection/Playlist';
 import {Albums} from '../custom/facedetection/Albums';
 import {Tracks} from '../custom/facedetection/Tracks';
 import IconBtn from '../custom/IconBtn';
@@ -111,10 +111,6 @@ const FaceDetection = ({navigation}) => {
   };
 
   const determineMood = async face => {
-    setPlaylist([]);
-    setAlbums([]);
-    setArtists([]);
-    setTracks([]);
     const smilingProbability = face.smilingProbability ?? 0;
     const leftEyeOpenProbability = face.leftEyeOpenProbability ?? 0;
     const rightEyeOpenProbability = face.rightEyeOpenProbability ?? 0;
@@ -152,14 +148,10 @@ const FaceDetection = ({navigation}) => {
   };
 
   const fetchResults = async () => {
-    setPlaylist([]);
-    setAlbums([]);
-    setArtists([]);
-    setTracks([]);
-    setLoading(true);
     const token = await AsyncStorage.getItem('token');
     const mood = await AsyncStorage.getItem('userMood');
     try {
+      setLoading(true);
       const response = await fetch(
         `https://api.spotify.com/v1/search?q=${encodeURIComponent(
           mood,
@@ -175,14 +167,12 @@ const FaceDetection = ({navigation}) => {
       const data = await response.json();
       setPlaylist(data?.playlists?.items);
       setAlbums(data?.albums?.items);
-      setArtists(data?.artists?.items);
       setTracks(data?.tracks?.items);
-
-      if (data) {
-        setLoading(false);
-      }
+      setArtists(data?.artists?.items);
     } catch (error) {
       console.log('Error while', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -209,7 +199,7 @@ const FaceDetection = ({navigation}) => {
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor={colors.light_dark} translucent={false} />
-      {!mood ? (
+      {!faceData ? (
         <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
           <View style={styles.buttonContainer}>
             <Button
@@ -242,12 +232,7 @@ const FaceDetection = ({navigation}) => {
         </View>
       ) : (
         <>
-          {loading ||
-          (!faceData &&
-            albums.length === 0 &&
-            artists.length === 0 &&
-            playlist.length === 0 &&
-            tracks.length === 0) ? (
+          {loading ? (
             <View style={styles.loadingContainer}>
               <ActivityIndicator size="large" color="chocolate" />
             </View>
@@ -280,12 +265,7 @@ const FaceDetection = ({navigation}) => {
                   </TouchableOpacity>
                 ))}
               </View>
-              <ScrollView
-                contentContainerStyle={{paddingHorizontal: 14}}
-                removeClippedSubviews={false}
-                showsVerticalScrollIndicator={false}>
-                {renderComponent()}
-              </ScrollView>
+              {renderComponent()}
             </>
           )}
         </>

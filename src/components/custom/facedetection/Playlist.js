@@ -24,8 +24,10 @@ export const PlayList = ({data, navigation}) => {
     <View style={{flex: 1}}>
       <FlatList
         data={data}
+        keyboardShouldPersistTaps="always"
         showsVerticalScrollIndicator={false}
         removeClippedSubviews={false}
+        contentContainerStyle={{paddingHorizontal: 14}}
         renderItem={({item, index}) => {
           // console.log('my data is is ', item);
           return (
