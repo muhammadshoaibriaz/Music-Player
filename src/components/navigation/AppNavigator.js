@@ -12,6 +12,8 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 // import {createSharedElementStackNavigator} from 'react-navigation-shared-element';
 import CustomTabBar from '../custom/CustomTabBar';
 import {colors} from '../constants/color';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import FaceDetection from '../screens/FaceDetection';
 
 const Tab = createBottomTabNavigator();
 // const Stack = createStackNavigator();
@@ -35,6 +37,7 @@ const HomeStack = () => {
         contentStyle: {backgroundColor: colors.light_dark},
         animation: 'slide_from_right',
         animationEnabled: true,
+        statusBarColor: colors.light_dark,
       }}>
       <Stack.Screen name="Home" component={screen.Home} />
       <Stack.Screen name="PlayList" component={screen.PlayList} />
@@ -43,6 +46,13 @@ const HomeStack = () => {
       <Stack.Screen name="SongDetails" component={screen.SongDetails} />
       <Stack.Screen name="ArtistTracks" component={screen.ArtistTracks} />
       <Stack.Screen name="NewSongTracks" component={screen.NewSongTracks} />
+      <Stack.Screen
+        name="FaceDetection"
+        component={screen.FaceDetection}
+        options={{
+          animation: 'fade_from_bottom',
+        }}
+      />
     </Stack.Navigator>
   );
 };
@@ -55,6 +65,7 @@ const SearchStack = () => {
         headerShown: false,
         animation: 'slide_from_right',
         contentStyle: {backgroundColor: colors.light_dark},
+        statusBarColor: colors.light_dark,
       }}>
       <Stack.Screen name="Search" component={screen.Search} />
       <Stack.Screen name="SearchPlayList" component={screen.SearchPlayList} />
@@ -72,6 +83,8 @@ const FavoriteStack = () => {
       screenOptions={{
         headerShown: false,
         contentStyle: {backgroundColor: colors.light_dark},
+        statusBarColor: colors.light_dark,
+        animation: 'ios',
       }}>
       <Stack.Screen name="Favorites" component={screen.Favorite} />
       <Stack.Screen name="FavPlayList" component={screen.FavPlayList} />
@@ -79,12 +92,38 @@ const FavoriteStack = () => {
   );
 };
 
+const PlayListStack = () => {
+  return (
+    <Stack.Navigator
+      initialRouteName="Playlists "
+      screenOptions={{
+        headerShown: false,
+        contentStyle: {backgroundColor: colors.light_dark},
+        animation: 'ios',
+        statusBarColor: colors.light_dark,
+      }}>
+      <Stack.Screen name="Playlists " component={screen.PlayLists} />
+      <Stack.Screen name="PlayListSongs" component={screen.PlayListSongs} />
+    </Stack.Navigator>
+  );
+};
+
 const AppNavigator = () => {
   const [visible, setVisible] = useState(true);
+  const [mood, setMood] = useState(null);
+
   useEffect(() => {
     const myTimeout = setTimeout(() => {
       setVisible(false);
     }, 3000);
+
+    const moodToken = async () => {
+      const moods = await AsyncStorage.getItem('userMood');
+      setMood(moods);
+      // console.log(moods);
+    };
+    moodToken();
+
     return () => clearTimeout(myTimeout);
   }, []);
 
@@ -93,40 +132,79 @@ const AppNavigator = () => {
   }
 
   return (
-    <NavigationContainer>
-      <Tab.Navigator
-        detachInactiveScreens={false}
-        initialRouteName="Home "
-        screenOptions={{
-          tabBarHideOnKeyboard: true,
-        }}
-        tabBar={props => <CustomTabBar {...props} />}>
-        <Tab.Screen
-          name="Home "
-          component={HomeStack}
-          options={({route}) => ({
-            headerShown: false,
-            tabBarStyle: {display: getFocusedRouteName(route)},
-          })}
-        />
-        <Tab.Screen
-          name="Playlists"
-          component={screen.PlayLists}
-          options={{headerShown: false}}
-        />
-        <Tab.Screen
-          name="Search1"
-          component={SearchStack}
-          options={{headerShown: false}}
-        />
-        <Tab.Screen
-          name="Favorite"
-          component={FavoriteStack}
-          options={{headerShown: false}}
-        />
-      </Tab.Navigator>
-    </NavigationContainer>
+    <>
+      {!mood ? (
+        <FaceDetection />
+      ) : (
+        <NavigationContainer>
+          <Tab.Navigator
+            detachInactiveScreens={false}
+            initialRouteName="Home "
+            screenOptions={{
+              tabBarHideOnKeyboard: true,
+            }}
+            tabBar={props => <CustomTabBar {...props} />}>
+            <Tab.Screen
+              name="Home "
+              component={HomeStack}
+              options={({route}) => ({
+                headerShown: false,
+                tabBarStyle: {display: getFocusedRouteName(route)},
+              })}
+            />
+            <Tab.Screen
+              name="Playlists"
+              component={PlayListStack}
+              options={{headerShown: false}}
+            />
+            <Tab.Screen
+              name="Search1"
+              component={SearchStack}
+              options={{headerShown: false}}
+            />
+            <Tab.Screen
+              name="Favorite"
+              component={FavoriteStack}
+              options={{headerShown: false}}
+            />
+          </Tab.Navigator>
+        </NavigationContainer>
+      )}
+    </>
   );
 };
+
+// const MainStack = () => {
+//   const [mood, setMood] = useState(null);
+
+//   useEffect(() => {
+//     const myTimeout = setTimeout(() => {
+//       setVisible(false);
+//     }, 3000);
+
+//     const moodToken = async () => {
+//       const moods = await AsyncStorage.getItem('userMood');
+//       setMood(moods);
+//       // console.log(moods);
+//     };
+//     moodToken();
+
+//     return () => clearTimeout(myTimeout);
+//   }, []);
+
+//   return (
+//     <>
+//       <NavigationContainer>
+//         {!mood ? (
+//           <Stack.Navigator initialRouteName="Face">
+//             <Stack.Screen name="Face" component={FaceDetection} />
+//           </Stack.Navigator>
+//         ) : (
+//           <Stack.Screen name="AppNavigator" component={AppNavigator} />
+//         )}
+//       </NavigationContainer>
+//     </>
+//   );
+// };
 
 export {AppNavigator};

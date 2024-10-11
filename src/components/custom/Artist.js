@@ -15,7 +15,7 @@ const {width} = Dimensions.get('screen');
 const ITEM_WIDTH = width / 4;
 const SPACING = 14;
 
-export default function Artist({data, navigation, onPress}) {
+export default function Artist({data, navigation}) {
   if (!data) {
     return <ActivityIndicator size={30} />;
   }
@@ -23,16 +23,19 @@ export default function Artist({data, navigation, onPress}) {
     <FlatList
       data={data}
       horizontal
+      removeClippedSubviews={false}
       contentContainerStyle={{
         paddingLeft: 14,
       }}
+      keyExtractor={(item, index) => index.toString()}
       showsHorizontalScrollIndicator={false}
       renderItem={({item, index}) => {
         // console.log('Artist details are ', item?.id);
         return (
           <TouchableOpacity
             style={styles.card}
-            onPress={() => navigation.navigate('ArtistDetails', {item})}>
+            key={index}
+            onPress={() => navigation.navigate('ArtistDetails')}>
             <Image
               source={{uri: item?.images[0]?.url}}
               style={styles.cardImage}
@@ -82,7 +85,6 @@ const styles = StyleSheet.create({
   },
   card: {
     width: ITEM_WIDTH,
-    marginVertical: 6,
     marginRight: SPACING,
     flexDirection: 'column',
     alignItems: 'center',

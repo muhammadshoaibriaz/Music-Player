@@ -22,7 +22,7 @@ const ITEM_WIDTH = width / 3;
 const ITEM_HEIGHT = ITEM_WIDTH;
 const SPACING = 14;
 
-export default function FavoriteAlbum({title, subtitle, data}) {
+export default function ForyouAlbum({title, subtitle, data}) {
   // Random color generator function
   const getRandomColor = () => {
     const getComponent = () => Math.floor(Math.random() * 156);
@@ -46,17 +46,12 @@ export default function FavoriteAlbum({title, subtitle, data}) {
 
   const bottomRef = useRef();
   return (
-    <View style={{marginTop: 10}}>
-      <StatusBar
-        translucent={true}
-        backgroundColor={'#00000060'}
-        animated={true}
-      />
+    <View style={{paddingTop: 10}}>
       <View style={styles.header}>
         <Text style={styles.headerTitle}>{title}</Text>
         <TouchableOpacity style={styles.seeAll}>
           <Text style={styles.headerSubtitle}>{subtitle}</Text>
-          <Icon name="arrowright" color={colors.light_text} size={20} />
+          {/* <Icon name="arrowright" color={colors.light_text} size={20} /> */}
         </TouchableOpacity>
       </View>
       <FlatList

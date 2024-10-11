@@ -120,15 +120,14 @@ export default function Search({navigation}) {
   const fetchSearchResults = useCallback(async () => {
     const token = await AsyncStorage.getItem('token');
     setLoading(true);
-    if (query) {
-      setQuery('');
-      bottomRef.current.open();
-    } else {
+    if (!query) {
       ToastAndroid.show('Please enter something!', 3000);
     }
     try {
       const response = await fetch(
-        `https://api.spotify.com/v1/search?q=${query}&type=track&limit=50`,
+        `https://api.spotify.com/v1/search?q=${encodeURIComponent(
+          query,
+        )}&type=track,album,playlist,artist&limit=50`,
         {
           method: 'GET',
           headers: {
@@ -184,134 +183,116 @@ export default function Search({navigation}) {
           onPress={fetchSearchResults}
         />
       </View>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        removeClippedSubviews={false}
-        contentContainerStyle={{paddingBottom: 60}}>
-        <View>
-          <Text style={styles.title}>Top genres</Text>
-          <View style={styles.genres}>
-            {genres.map((item, index) => (
-              <GenresCard
-                key={index}
-                item={item}
-                image={item?.image}
-                title={item?.name}
-                navigation={navigation}
-                style={{backgroundColor: item?.backgroundColor}}
-              />
-            ))}
-          </View>
+      {searchResults?.length > 0 && query.length > 0 ? (
+        <View style={{flex: 1}}>
+          <FlatList
+            data={searchResults}
+            keyExtractor={(item, index) => index.toString()}
+            removeClippedSubviews={false}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{paddingBottom: 60}}
+            renderItem={({item, index}) => {
+              // console.log('item is ', item);
+              return (
+                <TouchableOpacity
+                  style={styles.track}
+                  key={index}
+                  onPress={() => {
+                    playSong(item);
+                    // console.log(console.log(item));
+                  }}>
+                  <Image
+                    source={{uri: item?.album?.images[0]?.url}}
+                    style={styles.trackImage}
+                  />
+                  <View style={styles.trackDetails}>
+                    <Text
+                      numberOfLines={2}
+                      style={[
+                        styles.trackTitle,
+                        {
+                          color:
+                            isPlaying && playingTitle === item?.name
+                              ? 'chocolate'
+                              : 'white',
+                        },
+                      ]}>
+                      {item?.album?.name}
+                    </Text>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        width: '100%',
+                      }}>
+                      {item?.album?.artists?.map((item, index) => (
+                        <Text
+                          key={index}
+                          style={[styles.artistName]}
+                          numberOfLines={1}>
+                          {item?.name + ', '}
+                        </Text>
+                      ))}
+                    </View>
+                  </View>
+                </TouchableOpacity>
+              );
+            }}
+          />
         </View>
-        <View>
-          <Text onPress={fetchCategories} style={styles.title}>
-            Browse All
-          </Text>
-        </View>
-        {categories?.length < 1 ? (
-          <View
-            style={{
-              justifyContent: 'center',
-              alignItems: 'center',
-              height: 300,
-            }}>
-            <ActivityIndicator size={30} color={'chocolate'} />
-          </View>
-        ) : (
-          <View style={styles.genres}>
-            {categories?.items?.map((item, index) => (
-              <TouchableOpacity
-                style={[styles.card]}
-                onPress={() => navigation.navigate('SearchPlayList', {item})}
-                activeOpacity={0.8}
-                key={index}>
-                <Text style={[styles.name]}>{item?.name}</Text>
-                <Image
-                  source={{uri: item?.icons[0].url}}
-                  style={styles.image}
+      ) : (
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          removeClippedSubviews={false}
+          contentContainerStyle={{paddingBottom: 60}}>
+          <View>
+            <Text style={styles.title}>Top genres</Text>
+            <View style={styles.genres}>
+              {genres.map((item, index) => (
+                <GenresCard
+                  key={index}
+                  item={item}
+                  image={item?.image}
+                  title={item?.name}
+                  navigation={navigation}
+                  style={{backgroundColor: item?.backgroundColor}}
                 />
-              </TouchableOpacity>
-            ))}
+              ))}
+            </View>
           </View>
-        )}
-      </ScrollView>
-      <BottomSheet
-        openDuration={700}
-        closeOnPressBack={true}
-        customStyles={{
-          container: {
-            backgroundColor: colors.light_dark,
-            height: height,
-          },
-          draggableIcon: {display: 'none'},
-        }}
-        ref={bottomRef}
-        height={height}>
-        <View style={{width: '100%', height: '100%'}}>
-          {loading ? (
-            <View style={styles.container}>
-              <ActivityIndicator size={40} />
+          <View>
+            <Text onPress={fetchCategories} style={styles.title}>
+              Browse All
+            </Text>
+          </View>
+          {categories?.length < 1 ? (
+            <View
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: 300,
+              }}>
+              <ActivityIndicator size={30} color={'chocolate'} />
             </View>
           ) : (
-            <View style={{flex: 1, paddingHorizontal: 14}}>
-              <FlatList
-                data={searchResults}
-                keyExtractor={(item, index) => index.toString()}
-                removeClippedSubviews={false}
-                showsVerticalScrollIndicator={false}
-                contentContainerStyle={{paddingBottom: 60}}
-                renderItem={({item, index}) => {
-                  // console.log('item is ', item);
-                  return (
-                    <TouchableOpacity
-                      style={styles.track}
-                      key={index}
-                      onPress={() => {
-                        playSong(item);
-                        // console.log(console.log(item));
-                      }}>
-                      <Image
-                        source={{uri: item?.album?.images[0]?.url}}
-                        style={styles.trackImage}
-                      />
-                      <View style={styles.trackDetails}>
-                        <Text
-                          numberOfLines={2}
-                          style={[
-                            styles.trackTitle,
-                            {
-                              color:
-                                isPlaying && playingTitle === item?.name
-                                  ? 'chocolate'
-                                  : 'white',
-                            },
-                          ]}>
-                          {item?.album?.name}
-                        </Text>
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                            width: '100%',
-                          }}>
-                          {item?.album?.artists?.map((item, index) => (
-                            <Text
-                              key={index}
-                              style={[styles.artistName, {fontFamily: 'Arial'}]}
-                              numberOfLines={1}>
-                              {item?.name + ', '}
-                            </Text>
-                          ))}
-                        </View>
-                      </View>
-                    </TouchableOpacity>
-                  );
-                }}
-              />
+            <View style={styles.genres}>
+              {categories?.items?.map((item, index) => (
+                <TouchableOpacity
+                  style={[styles.card]}
+                  onPress={() => navigation.navigate('SearchPlayList', {item})}
+                  activeOpacity={0.8}
+                  key={index}>
+                  <Text style={[styles.name]}>{item?.name}</Text>
+                  <Image
+                    source={{uri: item?.icons[0].url}}
+                    style={styles.image}
+                  />
+                </TouchableOpacity>
+              ))}
             </View>
           )}
-        </View>
-      </BottomSheet>
+        </ScrollView>
+      )}
     </View>
   );
 }

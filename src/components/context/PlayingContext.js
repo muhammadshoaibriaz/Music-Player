@@ -22,6 +22,7 @@ const PlayingProvider = ({children}) => {
   const [isPause, setIsPause] = useState(false);
   const [sound, setSound] = useState(null);
   const [looping, setLooping] = useState(false);
+  const [urlLoaded, setUrlLoader] = useState(false);
   const loopingRef = useRef(looping);
 
   const playTrack1 = track => {
@@ -35,9 +36,9 @@ const PlayingProvider = ({children}) => {
       setPlayingTitle(track?.name);
       setArtistName(track?.artists[0]?.name);
       setCurrentTrack(track);
-      setIsPlaying(true);
       setIsPause(false);
       if (preview_url !== null) {
+        setIsPlaying(true);
         setSound(preview_url);
         SoundPlayer.playUrl(preview_url);
       } else {
@@ -46,7 +47,7 @@ const PlayingProvider = ({children}) => {
       }
       try {
         SoundPlayer.addEventListener('FinishedPlaying', ({success}) => {
-          console.log('finished playing', success);
+          // console.log('finished playing', success);
           if (success) {
             if (loopingRef.current) {
               setIsPlaying(true);

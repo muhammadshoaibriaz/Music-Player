@@ -3,11 +3,11 @@ import React from 'react';
 import IonsIcon from 'react-native-vector-icons/Ionicons';
 import {font} from '../constants/font';
 import {colors} from '../constants/color';
-export default function Button({icon, title, onPress}) {
+export default function Button({icon, title, onPress, color, style}) {
   return (
-    <Pressable onPress={onPress} style={styles.button}>
+    <Pressable onPress={onPress} style={[styles.button, style]}>
       <View style={styles.icon}>
-        <IonsIcon name={icon} size={24} color="white" />
+        <IonsIcon name={icon} size={24} color={color} />
       </View>
       <Text style={styles.title}>{title}</Text>
     </Pressable>

@@ -10,7 +10,13 @@ import {
   Animated,
   StatusBar,
 } from 'react-native';
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import LinearGradient from 'react-native-linear-gradient';
 import {colors} from '../constants/color';
 import {font} from '../constants/font';
@@ -20,14 +26,16 @@ import {PlayingContext} from '../context/PlayingContext';
 import IconBtn from '../custom/IconBtn';
 import Entypo from 'react-native-vector-icons/Entypo';
 import MAterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import {Song} from '../custom/Song';
+import {Track} from '../custom/Track';
 
 const {width} = Dimensions.get('screen');
 const ITEM_WIDTH = width / 3;
 
 export default function SongDetails({route, navigation}) {
   const {item} = route.params;
-  const id = item?.artists[0]?.id;
-  console.log('song details are ', item);
+  const id = item?.id;
+  // console.log('song details are ', item);
   // console.log('artist id is ', id);
 
   useEffect(() => {
@@ -37,29 +45,66 @@ export default function SongDetails({route, navigation}) {
   const [tracks, setTracks] = useState([]);
   const fetchTracks = async () => {
     const token = await AsyncStorage.getItem('token');
-    const response = await fetch(
-      `https://api.spotify.com/v1/artists/${id}/albums`,
-      {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
+    const response = await fetch(`https://api.spotify.com/v1/albums/${id}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
       },
-    );
+    });
     const data = await response.json();
-    // console.log('data is', data);
-    setTracks(data?.items);
+    // console.log('data is ', data);
+    setTracks(data?.tracks?.items);
+    // console.log('data is', data?.tracks?.items);
   };
 
-  const {playingTitle, artistName, playingImage, backgroundColor, isPlaying} =
-    useContext(PlayingContext);
-  console.log('SongDetails component render');
+  const {
+    playingTitle,
+    playTrack1,
+    artistName,
+    playingImage,
+    backgroundColor,
+    isPlaying,
+    playArtistSong,
+  } = useContext(PlayingContext);
+
+  const playSong = useCallback(track => {
+    try {
+      playArtistSong(track);
+      // console.log('track', track);
+    } catch (error) {
+      console.log('Error while playing song', error);
+    }
+  }, []);
+
+  const handlePlayPause = useCallback(
+    item => {
+      playTrack1(item?.track);
+    },
+    [playTrack1],
+  );
+
+  // console.log('SongDetails component render');
   const scrollY = useRef(new Animated.Value(0)).current;
   const scale = scrollY.interpolate({
     inputRange: [0, 350],
     outputRange: [1, 0],
   });
+
+  const scale1 = useRef(new Animated.Value(1)).current;
+  const onPressIn = () => {
+    Animated.spring(scale1, {
+      toValue: 0.98,
+      useNativeDriver: true,
+    }).start();
+  };
+  const onPressOut = () => {
+    Animated.spring(scale1, {
+      toValue: 1,
+      useNativeDriver: true,
+    }).start();
+  };
+
   return (
     <View style={{flex: 1}}>
       <StatusBar translucent={false} backgroundColor={backgroundColor} />
@@ -88,7 +133,7 @@ export default function SongDetails({route, navigation}) {
             keyExtractor={(item, index) => index.toString()}
             onScroll={Animated.event(
               [{nativeEvent: {contentOffset: {y: scrollY}}}],
-              {useNativeDriver: true},
+              {useNativeDriver: false},
             )}
             ListHeaderComponent={
               <View
@@ -144,67 +189,64 @@ export default function SongDetails({route, navigation}) {
             renderItem={({item, index}) => {
               // console.log('item albums are ', item);
               return (
-                <Pressable
+                // <Pressable
+                //   // onPress={() => handlePlayPause(item)}
+                //   onPressIn={onPressIn}
+                //   onPressOut={onPressOut}
+                //   key={index}>
+                //   <Animated.View
+                //     style={[
+                //       styles.songPlaylist,
+                //       {transform: [{scale: scale1}]},
+                //     ]}>
+                //     <View style={styles.left}>
+                //       <IconBtn
+                //         icon={'musical-notes'}
+                //         size={20}
+                //         color={'white'}
+                //         style={{backgroundColor: '#222'}}
+                //       />
+                //       <View style={styles.details}>
+                //         <Text
+                //           numberOfLines={2}
+                //           style={[
+                //             styles.songName,
+                //             isPlaying && {
+                //               color:
+                //                 item?.track?.name == playingTitle
+                //                   ? 'chocolate'
+                //                   : 'white',
+                //             },
+                //           ]}>
+                //           {item?.name}
+                //         </Text>
+                //         <Text numberOfLines={1} style={{marginTop: 4}}>
+                //           {item?.artists?.map((item, index) => (
+                //             <Text
+                //               numberOfLines={1}
+                //               style={styles.songDescription}
+                //               key={index}>
+                //               {item?.name + ', '}
+                //             </Text>
+                //           ))}
+                //         </Text>
+                //       </View>
+                //     </View>
+                //     <IconBtn
+                //       icon={'ellipsis-vertical'}
+                //       color={colors.light}
+                //       size={20}
+                //       // onPress={onIconPress}
+                //     />
+                //   </Animated.View>
+                // </Pressable>
+                // <Text>fasf</Text>
+                <Track
+                  item={item}
                   key={index}
-                  style={styles.iconImage}
-                  onPress={() => navigation.navigate('NewSongTracks', {item})}>
-                  <View>
-                    <LinearGradient
-                      colors={['transparent', '#00000080']}
-                      style={[
-                        styles.image,
-                        {position: 'absolute', zIndex: 111},
-                      ]}></LinearGradient>
-                    <Image
-                      source={{uri: item?.images[0].url}}
-                      style={[styles.image]}
-                    />
-                  </View>
-                  <View style={styles.details}>
-                    <Text style={styles.albumName}>{item?.name}</Text>
-                    <View
-                      style={{
-                        width: '100%',
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        marginTop: 4,
-                      }}>
-                      {item?.artists?.map((item, index) => (
-                        <Text style={styles.artists} key={index}>
-                          {item?.name + ', '}
-                        </Text>
-                      ))}
-                    </View>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
-                        marginTop: 8,
-                      }}>
-                      <View
-                        style={{flexDirection: 'row', alignItems: 'center'}}>
-                        <Entypo
-                          name="folder-music"
-                          size={18}
-                          color={colors.light_text}
-                        />
-                        <Text style={styles.albumType}>{item?.album_type}</Text>
-                      </View>
-
-                      <View
-                        style={{flexDirection: 'row', alignItems: 'center'}}>
-                        <Text style={styles.total}>
-                          total {item?.total_tracks}
-                        </Text>
-                        <MAterialCommunityIcons
-                          name="playlist-music"
-                          size={18}
-                          color={colors.light_text}
-                        />
-                      </View>
-                    </View>
-                  </View>
-                </Pressable>
+                  onPress={() => playSong(item)}
+                  // onIconPress={() => handleBottomSheet(item)}
+                />
               );
             }}
           />
@@ -319,5 +361,40 @@ const styles = StyleSheet.create({
   artist: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+
+  // fdasf
+  songPlaylist: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 8,
+    paddingLeft: 14,
+    width: '100%',
+  },
+  left: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  iconImage: {
+    width: 50,
+    height: 50,
+    borderRadius: 6,
+  },
+  songName: {
+    color: colors.light,
+    fontFamily: font.Montserrat_Medium,
+    fontSize: 13,
+  },
+  songDescription: {
+    color: colors.light_text,
+    fontFamily: font.Montserrat_Regular,
+    fontSize: 12,
+    marginTop: 6,
+  },
+  details: {
+    flex: 1,
+    paddingLeft: 12,
   },
 });

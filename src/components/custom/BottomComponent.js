@@ -8,7 +8,13 @@ import {
   Animated,
   Share,
 } from 'react-native';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {
+  startTransition,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import BottomSheet from 'react-native-raw-bottom-sheet';
 import LinearGradient from 'react-native-linear-gradient';
 import IconBtn from './IconBtn';
@@ -17,15 +23,17 @@ import {font} from '../constants/font';
 import {PlayingContext} from '../context/PlayingContext';
 import {useDispatch} from 'react-redux';
 import {addFavorite, removeFavorite} from '../reduxtolkit/slices/favoriteSlice';
-import ProgressBar from './ProgressBar';
+import SoundPlayer from 'react-native-sound-player';
+
 const {width, height} = Dimensions.get('screen');
 const DOT_SIZE = 12;
+
 export default function BottomComponent({item, bottomRef}) {
-  // Time calcultation
-  const milliSeconds = item?.track?.duration_ms;
-  const totalSeconds = Math.floor(milliSeconds / 1000);
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
+  // Time calculation
+  // const milliSeconds = item?.track?.duration_ms;
+  // const totalSeconds = Math.floor(milliSeconds / 1000);
+  // const minutes = Math.floor(totalSeconds / 60);
+  // const seconds = totalSeconds % 60;
 
   // Random color generator function
   const getRandomColor = () => {
@@ -68,6 +76,7 @@ export default function BottomComponent({item, bottomRef}) {
     return;
     // console.log('favorite is ', item);
   };
+
   const handleRemoveFromFavorite = item => {
     dispatch(removeFavorite(item));
     setFavorite(false);
@@ -75,23 +84,26 @@ export default function BottomComponent({item, bottomRef}) {
     // console.log('favorite is ', item);
   };
 
-  // const [widths, setWidths] = useState(1);
-  // useEffect(() => {
-  //   const myInterval = setInterval(() => {
-  //     setWidths(pre => pre + 1);
-  //   }, 1000);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
 
-  //   const myTimeout = setTimeout(() => {
-  //     clearInterval(myInterval);
-  //   }, seconds * 1000);
-
-  //   // clean
-  //   return () => {
-  //     clearInterval(myInterval);
-  //     clearTimeout(myTimeout);
-  //   };
-  // }, []);
-  // console.log(widths);
+  useEffect(() => {
+    if (isPlaying) {
+      var interval = setInterval(async () => {
+        try {
+          const info = await SoundPlayer.getInfo();
+          setCurrentTime(info.currentTime);
+          setDuration(info.duration);
+        } catch (error) {
+          console.error('Error tracking playback:', error);
+        }
+      }, 1000);
+    } else {
+      clearInterval(interval);
+    }
+    return () => clearInterval(interval);
+  }, [isPlaying]);
+  // console.log(currentTime);
 
   return (
     <BottomSheet
@@ -160,17 +172,20 @@ export default function BottomComponent({item, bottomRef}) {
               <Animated.View
                 style={[
                   styles.progressDot,
-                  // {width: `${widths}%`},
+                  {width: `${(currentTime / duration) * 100}%`},
                 ]}></Animated.View>
-
-              {/* <ProgressBar duration={seconds} /> */}
             </View>
 
             <View style={styles.timeProgress}>
-              <Text style={styles.time}>00:00</Text>
               <Text style={styles.time}>
-                {'0' + minutes + ':'}
-                {seconds < 10 ? '0' + seconds : seconds}
+                00:{' '}
+                {currentTime < 10
+                  ? '0' + Math.round(currentTime)
+                  : Math.round(currentTime)}
+              </Text>
+              <Text style={styles.time}>
+                00:
+                {Math.round(duration)}
               </Text>
             </View>
             <View style={styles.playerIcon}>
@@ -308,13 +323,13 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   progressDot: {
-    width: DOT_SIZE,
-    height: DOT_SIZE,
+    // width: DOT_SIZE,
+    height: 2,
     borderRadius: DOT_SIZE,
     backgroundColor: colors.light,
     position: 'absolute',
     left: 0,
-    bottom: -DOT_SIZE / 2 + 2,
+    // bottom: -DOT_SIZE / 2 + 2,
   },
   timeProgress: {
     flexDirection: 'row',

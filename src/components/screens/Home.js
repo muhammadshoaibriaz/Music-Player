@@ -7,14 +7,18 @@ import {
   Linking,
   TouchableOpacity,
   RefreshControl,
-  Dimensions,
   StatusBar,
-  FlatList,
-  SafeAreaView,
-  Platform,
 } from 'react-native';
-import React, {useContext, useEffect, useRef, useState} from 'react';
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import Icon from 'react-native-vector-icons/AntDesign';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import axios from 'axios';
 import {font} from '../constants/font';
 import {colors} from '../constants/color';
@@ -34,15 +38,13 @@ import {PlayingContext} from '../context/PlayingContext';
 import NewSongCard from '../custom/NewSongCard';
 import BottomComponent from '../custom/BottomComponent';
 import FontAwesome5 from 'react-native-vector-icons/Octicons';
-import Moods from '../custom/Moods';
-import {categories} from '../../../categories';
 import {
   ArtistShimmer,
   RecentShimmer,
   RecommendedShimmer,
-  ShimmerExample,
 } from './ShimmerExample';
 import FavoriteAlbum from '../custom/FavoriteAlbum';
+import ForyouAlbum from '../custom/FavoriteAlbum';
 
 // spotifyAuthConfiguration
 const CLIENT_ID = '6d06485cb50646159ee240e6a8262044';
@@ -56,6 +58,20 @@ export default function Home({navigation}) {
   const time = new Date();
   const current_time = time.getHours();
 
+  const [userMood, setUserMood] = useState('');
+  useEffect(() => {
+    const getUserMood = async () => {
+      try {
+        const mood = await AsyncStorage.getItem('userMood');
+        setUserMood(mood || 'No mood found');
+      } catch (error) {
+        console.error('Error fetching mood from AsyncStorage', error);
+      }
+    };
+    getUserMood();
+  }, []);
+  console.log('mood from home is ', userMood);
+
   // States
   const [userProfile, setUserProfile] = useState(null);
   const [recentlyPlayed, setRecentlyPlayed] = useState([]);
@@ -63,18 +79,21 @@ export default function Home({navigation}) {
   const [featured, setFeatured] = useState([]);
   const [artists, setArtists] = useState([]);
   const [newSongs, setNewSongs] = useState([]);
+  // mood Data
+  const [artists1, setArtists1] = useState([]);
+  const [albums, setAlbums] = useState([]);
+  const [playlist, setPlaylist] = useState([]);
+  const [tracks, setTracks] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      getArtists();
-      newReleases();
-      favoriteSongs();
-      featuredPlaylist();
+      fetchResults();
       fetchRecentlyPlayedSongs();
       fetchUserProfile();
+      // featuredPlaylist();
     };
     fetchData();
-  }, []);
+  }, [userMood]);
 
   const loginWithSpotify = async () => {
     const scopes =
@@ -133,6 +152,36 @@ export default function Home({navigation}) {
   }, []);
 
   // ------------------API REQUESTS----------------
+
+  const fetchResults = async () => {
+    const token = await AsyncStorage.getItem('token');
+    const mood = await AsyncStorage.getItem('userMood');
+    try {
+      const response = await fetch(
+        `https://api.spotify.com/v1/search?q=${encodeURIComponent(
+          mood,
+        )} songs&type=track,album,playlist,artist&limit=50`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+      const data = await response.json();
+      console.log('Search response is ', data);
+      // setPlaylist(JSON.stringify(data?.playlists));
+      setPlaylist(data?.playlists?.items);
+      setAlbums(data?.albums?.items);
+      setArtists1(data?.artists?.items);
+      setTracks(data?.tracks?.items);
+      console.log('playlist is ', data?.playlists?.items);
+    } catch (error) {
+      console.log('Error while', error);
+    }
+  };
+
   const fetchUserProfile = async accessToken => {
     try {
       const response = await axios.get('https://api.spotify.com/v1/me', {
@@ -171,15 +220,6 @@ export default function Home({navigation}) {
     setNewSongs(data?.albums?.items);
   };
 
-  // featured Songs
-  const featuredPlaylist = async () => {
-    const token = await AsyncStorage.getItem('token');
-    console.log(token);
-    const data = await fetchFeaturedPlaylists(token);
-    // console.log('Featured playlist data is ', data);
-    setFeatured(data?.playlists?.items);
-  };
-
   // favorite Songs
   const favoriteSongs = async () => {
     const token = await AsyncStorage.getItem('token');
@@ -187,6 +227,15 @@ export default function Home({navigation}) {
     const data = await fetchFavoriteArtistTracks(token);
     setFavorite(data?.tracks);
     // console.log('favorite songs data is ', favorite);
+  };
+
+  // featured Songs
+  const featuredPlaylist = async () => {
+    const token = await AsyncStorage.getItem('token');
+    console.log(token);
+    const data = await fetchFeaturedPlaylists(token);
+    // console.log('Featured playlist data is ', data);
+    setFeatured(data?.playlists?.items);
   };
 
   // Context Api
@@ -199,11 +248,11 @@ export default function Home({navigation}) {
   const onRefresh = async () => {
     setRefreshing(true);
     try {
-      fetchArtists(),
-        newReleases(),
-        featuredPlaylist(),
-        fetchRecentlyPlayedSongs(),
-        favoriteSongs();
+      fetchResults(), fetchRecentlyPlayedSongs();
+      // fetchArtists(),
+      // newReleases(),
+      // featuredPlaylist(),
+      // favoriteSongs();
     } catch (err) {
       console.error('Error fetching data:', err);
     } finally {
@@ -212,9 +261,9 @@ export default function Home({navigation}) {
   };
 
   return (
-    <SafeAreaView style={[styles.container]}>
+    <View style={[styles.container]}>
       <StatusBar translucent={false} backgroundColor={colors.light_dark} />
-      <View style={styles.header}>
+      <View style={[styles.header]}>
         <View style={styles.innerContainer}>
           <Image
             source={require('../../assets/images/tolga.jpg')}
@@ -234,9 +283,26 @@ export default function Home({navigation}) {
             </Text>
           </View>
         </View>
-        <TouchableOpacity style={styles.btn} onPress={loginWithSpotify}>
-          <FontAwesome5 name={'sign-in'} color={'#fff'} size={20} />
-        </TouchableOpacity>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            width: '25%',
+            justifyContent: 'space-between',
+          }}>
+          <TouchableOpacity style={styles.btn} onPress={loginWithSpotify}>
+            <FontAwesome5 name={'sign-in'} color={'#fff'} size={20} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.btn}
+            onPress={() => navigation.navigate('FaceDetection')}>
+            <MaterialCommunityIcons
+              name={'face-recognition'}
+              color={'#fff'}
+              size={20}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
       <View style={{flex: 1}}>
         <ScrollView
@@ -249,42 +315,43 @@ export default function Home({navigation}) {
           ) : (
             <AlbumCard
               title={'Recently Played'}
-              subtitle={'See All'}
+              // subtitle={'See All'}
               navigation={navigation}
               data={recentlyPlayed}
               bottomRef={bottomRef}
             />
           )}
-          {newSongs?.length < 1 ? (
+          {tracks?.length < 1 ? (
+            <RecentShimmer />
+          ) : (
+            <ForyouAlbum
+              navigation={navigation}
+              title={'For you'}
+              // subtitle={'See All'}
+              data={tracks}
+            />
+          )}
+          {playlist?.length < 1 ? (
             <RecentShimmer />
           ) : (
             <NewSongCard
               navigation={navigation}
-              title={'New Song'}
-              subtitle={'See All'}
-              data={newSongs}
+              title={'Songs playlist'}
+              // subtitle={'See All'}
+              data={albums}
             />
           )}
-          {favorite?.length < 1 ? (
-            <RecentShimmer />
-          ) : (
-            <FavoriteAlbum
-              navigation={navigation}
-              title={'Favorite Songs'}
-              subtitle={'See All'}
-              data={favorite}
-            />
-          )}
-          {featured?.length < 1 ? (
+
+          {albums?.length < 1 ? (
             <RecommendedShimmer />
           ) : (
             <Recommended
               title={'Recommended For You'}
-              data={featured}
+              data={playlist}
               navigation={navigation}
             />
           )}
-          {artists?.length < 1 ? (
+          {artists1?.length < 1 ? (
             <ArtistShimmer />
           ) : (
             <View>
@@ -299,7 +366,7 @@ export default function Home({navigation}) {
                   <Icon name="arrowright" color={colors.light_text} size={20} />
                 </TouchableOpacity>
               </View>
-              <Artist data={artists} navigation={navigation} />
+              <Artist data={artists1} navigation={navigation} />
             </View>
           )}
         </ScrollView>
@@ -316,21 +383,21 @@ export default function Home({navigation}) {
         />
       )}
       <BottomComponent bottomRef={bottomRef} item={items} />
-    </SafeAreaView>
+    </View>
   );
 }
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.light_dark,
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 20,
+    // paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 20,
   },
   header: {
     paddingHorizontal: 14,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 14,
+    paddingVertical: 8,
   },
   name: {
     fontFamily: font.Montserrat_SemiBold,
@@ -349,7 +416,7 @@ const styles = StyleSheet.create({
   },
   details: {
     paddingHorizontal: 14,
-    width: '70%',
+    // width: '70%',
   },
   welcome: {
     fontFamily: font.Montserrat_Regular,
@@ -360,7 +427,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 14,
   },
   headerTitle: {
     color: colors.light,

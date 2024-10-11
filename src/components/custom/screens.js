@@ -14,6 +14,8 @@ import ArtistTracks from '../screens/ArtistTracks';
 import BrowseTrack from '../screens/BrowseTrack';
 import NewSongTracks from '../screens/NewSongTracks';
 import FavPlayList from '../screens/FavPlayList';
+import PlayListSongs from '../screens/PlayListSongs';
+import FaceDetection from '../screens/FaceDetection';
 
 export const screen = {
   Home,
@@ -32,4 +34,6 @@ export const screen = {
   BrowseTrack,
   NewSongTracks,
   FavPlayList,
+  PlayListSongs,
+  FaceDetection,
 };

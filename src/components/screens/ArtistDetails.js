@@ -20,6 +20,7 @@ import {ArtistAlbum} from '../custom/ArtistAlbum';
 import {fetchArtistAlbums} from '../../db/musicDb';
 import * as Animatable from 'react-native-animatable';
 import IonIcons from 'react-native-vector-icons/Ionicons';
+import {PlayingContext} from '../context/PlayingContext';
 
 const {width} = Dimensions.get('screen');
 const ITEM_WIDTH = width / 4;
@@ -61,9 +62,10 @@ export default function ArtistDetails({route, navigation}) {
     setArtists(data?.artists);
     console.log('artists are ', data);
   };
+  const {backgroundColor} = useContext(PlayingContext);
 
   const scrollY = useRef(new Animated.Value(0)).current;
-  const backgroundColor = scrollY.interpolate({
+  const backgroundColors = scrollY.interpolate({
     inputRange: [0, 100],
     outputRange: ['transparent', '#00000030'],
     extrapolate: 'clamp',
@@ -71,13 +73,8 @@ export default function ArtistDetails({route, navigation}) {
 
   return (
     <View style={{flex: 1}}>
-      <StatusBar
-        animated={true}
-        showHideTransition={'fade'}
-        backgroundColor={'#00000060'}
-        translucent={true}
-      />
-      <Animated.View style={[styles.icon, {backgroundColor: backgroundColor}]}>
+      <StatusBar backgroundColor={colors.light_dark} translucent={false} />
+      <Animated.View style={[styles.icon, {backgroundColor: backgroundColors}]}>
         <IonIcons
           name={'arrow-back'}
           size={24}
@@ -96,8 +93,8 @@ export default function ArtistDetails({route, navigation}) {
           </View>
         ) : (
           <Animated.FlatList
-            bounces={false}
             data={tracks}
+            bounces={false}
             removeClippedSubviews={false}
             onScroll={Animated.event(
               [{nativeEvent: {contentOffset: {y: scrollY}}}],
@@ -156,6 +153,7 @@ export default function ArtistDetails({route, navigation}) {
                 <Animatable.View
                   animation={'fadeInUp'}
                   delay={index * 100}
+                  key={index}
                   duration={1000}>
                   <ArtistAlbum
                     onPress={() => navigation.navigate('ArtistTracks', {item})}
@@ -309,6 +307,5 @@ const styles = StyleSheet.create({
     zIndex: 1,
     borderRadius: 50,
     marginLeft: 8,
-    top: 35,
   },
 });

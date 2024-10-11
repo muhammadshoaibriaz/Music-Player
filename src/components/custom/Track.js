@@ -48,6 +48,7 @@ export const Track = ({item, onPress, onIconPress}) => {
           />
           <View style={styles.details}>
             <Text
+              numberOfLines={2}
               style={[
                 styles.songName,
                 isPlaying && {

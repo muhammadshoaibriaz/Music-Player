@@ -1,10 +1,23 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {Provider} from 'react-redux';
 import store from './src/components/reduxtolkit/store';
 import {PlayingProvider} from './src/components/context/PlayingContext';
-import {AppNavigator} from './src/components/navigation/AppNavigator';
+import {
+  AppNavigator,
+  MainStack,
+} from './src/components/navigation/AppNavigator';
+import FaceDetection from './src/components/screens/FaceDetection';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function App() {
+  // useEffect(async () => {
+  //   const faceToken = await AsyncStorage.getItem('faceToken');
+  //   if (faceToken) {
+  //     console.log(faceToken);
+  //   } else {
+  //     return;
+  //   }
+  // }, []);
   return (
     <Provider store={store}>
       <PlayingProvider>

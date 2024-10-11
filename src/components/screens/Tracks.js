@@ -71,7 +71,7 @@ export default function Tracks({route, navigation}) {
         />
         <Text style={styles.tracks}>Tracks</Text>
       </View>
-      {tracks.length < 1 ? (
+      {tracks?.length < 1 ? (
         <View
           style={{
             flex: 1,

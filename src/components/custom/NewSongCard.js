@@ -10,7 +10,6 @@ import {
 import React from 'react';
 import {colors} from '../constants/color';
 import {font} from '../constants/font';
-import Icon from 'react-native-vector-icons/AntDesign';
 import LinearGradient from 'react-native-linear-gradient';
 
 const {width} = Dimensions.get('screen');
@@ -25,7 +24,7 @@ export default function NewSongCard({title, subtitle, data, navigation}) {
         <Text style={styles.headerTitle}>{title}</Text>
         <TouchableOpacity style={styles.seeAll} onPress={() => {}}>
           <Text style={styles.headerSubtitle}>{subtitle}</Text>
-          <Icon name="arrowright" color={colors.light_text} size={20} />
+          {/* <Icon name="arrowright" color={colors.light_text} size={20} /> */}
         </TouchableOpacity>
       </View>
       <FlatList
@@ -48,7 +47,7 @@ export default function NewSongCard({title, subtitle, data, navigation}) {
               <View style={styles.imageContainer}>
                 <Image
                   // source={require('../../assets/images/hero-dynamic.jpg')}
-                  source={{uri: item?.images[2]?.url}}
+                  source={{uri: item?.images[0]?.url}}
                   style={styles.cardImage}
                 />
               </View>
@@ -124,7 +123,7 @@ const styles = StyleSheet.create({
   },
   gradient: {
     width: '100%',
-    height: 'auto',
+    height: 36,
     position: 'absolute',
     paddingLeft: 8,
     paddingBottom: 4,

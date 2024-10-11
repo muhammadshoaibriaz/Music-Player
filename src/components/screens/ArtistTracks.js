@@ -42,13 +42,8 @@ export default function ArtistTracks({route, navigation}) {
     }
   }, []);
   return (
-    <View style={{flex: 1, paddingTop: 30}}>
-      <StatusBar
-        animated={true}
-        showHideTransition={'fade'}
-        translucent={true}
-        backgroundColor={colors.light_dark}
-      />
+    <View style={{flex: 1}}>
+      <StatusBar translucent={false} backgroundColor={colors.light_dark} />
       <View style={styles.header}>
         <IconBtn
           size={24}

@@ -183,7 +183,7 @@ export default function FavPlayList({route, navigation}) {
   // console.log('PlayList component render');
   return (
     <View style={{flex: 1}}>
-      <StatusBar backgroundColor={'#00000060'} translucent={true} />
+      <StatusBar backgroundColor={backgroundColor} translucent={false} />
       <Animated.View style={[styles.header, {backgroundColor: backgroundColo}]}>
         <IconBtn
           icon="arrow-back"
@@ -191,10 +191,10 @@ export default function FavPlayList({route, navigation}) {
           color="white"
           onPress={() => navigation.goBack()}
         />
-        <Animated.Text
-          numberOfLines={2}
-          style={[styles.artistName, {fontSize: 16, opacity}]}>
-          {item?.name}
+        <Animated.Text style={[styles.artistName, {fontSize: 16, opacity}]}>
+          {item?.name?.length > 30
+            ? item?.name?.slice(0, 30) + '...'
+            : item?.name?.name}
         </Animated.Text>
       </Animated.View>
       <View style={{flex: 1}}>
@@ -372,7 +372,6 @@ const styles = StyleSheet.create({
     fontFamily: font.Montserrat_Bold,
     color: colors.light,
     zIndex: 11,
-    width: '100%',
   },
   description: {
     fontFamily: font.Montserrat_Regular,
@@ -471,8 +470,6 @@ const styles = StyleSheet.create({
     zIndex: 11,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'red',
-    top: 32,
   },
   headerTitle: {
     fontSize: 20,

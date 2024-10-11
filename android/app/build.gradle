@@ -125,6 +125,8 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     // implementation "com.google.firebase:firebase-ml-vision"
     implementation 'com.google.mlkit:face-detection:16.0.7'
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore")
     
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")

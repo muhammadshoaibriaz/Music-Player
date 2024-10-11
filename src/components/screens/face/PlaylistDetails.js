@@ -37,7 +37,7 @@ import {addFavorite} from '../reduxtolkit/slices/favoriteSlice';
 import {addSongToPlaylist} from '../reduxtolkit/slices/playlistSlices';
 import {Dialog} from 'react-native-elements';
 
-export default function PlayList({route, navigation}) {
+export default function PlaylistDetails({route, navigation}) {
   const {item} = route.params;
   const id = item?.id;
   // console.log('Playlist data is ', item);
@@ -218,7 +218,7 @@ export default function PlayList({route, navigation}) {
           onPress={() => navigation.goBack()}
         />
         <Animated.Text
-          numberOfLines={1}
+          numberOfLines={2}
           style={[styles.artistName, {fontSize: 16, opacity}]}>
           {item?.name}
         </Animated.Text>

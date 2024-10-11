@@ -11,7 +11,41 @@ import {colors} from '../constants/color';
 import {font} from '../constants/font';
 export const SearchBar = memo(
   ({onChangeText, value, onPress, style, onFocus, onBlur}) => {
-    console.log('Searchbar');
+    // const [query, setQuery] = useState('');
+    // const [categories, setCategories] = useState([]);
+    // const [searchResults, setSearchResults] = useState([]);
+    // const [loading, setLoading] = useState(false);
+
+    // const {isPlaying, playingTitle, setIsPlaying, setPlayingTitle} =
+    //   useContext(PlayingContext);
+    // const fetchSearchResults = useCallback(async () => {
+    //   const token = await AsyncStorage.getItem('token');
+    //   setLoading(true);
+    //   if (!query) {
+    //     s;
+    //     ToastAndroid.show('Please enter something!', 3000);
+    //   }
+    //   try {
+    //     const response = await fetch(
+    //       `https://api.spotify.com/v1/search?q=${query}&type=track&limit=50`,
+    //       {
+    //         method: 'GET',
+    //         headers: {
+    //           Authorization: `Bearer ${token}`,
+    //           'Content-Type': 'application/json',
+    //         },
+    //       },
+    //     );
+    //     const data = await response.json();
+    //     setSearchResults(data?.tracks?.items);
+    //     console.log('query data is ', data);
+    //   } catch (error) {
+    //     console.log('Error while fetching songs', error);
+    //   } finally {
+    //     setLoading(false);
+    //   }
+    // }, [query]);
+    // console.log('Searchbar');
     return (
       <View style={[styles.searchBar, style]}>
         <TextInput

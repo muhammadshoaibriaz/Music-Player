@@ -145,7 +145,7 @@ export default function Favorite({navigation}) {
     <View style={styles.container}>
       <StatusBar translucent={false} backgroundColor={colors.light_dark} />
       <View style={styles.header}>
-        <Text style={styles.favorite}>Favorite collection</Text>
+        <Text style={styles.favorite}>Favorites</Text>
       </View>
       <View style={styles.btns}>
         <TouchableOpacity

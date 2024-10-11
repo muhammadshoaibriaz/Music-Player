@@ -31,8 +31,7 @@ export const Song = ({item, onPress, onIconPress}) => {
     }).start();
   };
 
-  const {isPlaying, playingTitle, stopSong, resumeSong, sound} =
-    useContext(PlayingContext);
+  const {isPlaying, playingTitle} = useContext(PlayingContext);
 
   return (
     <Pressable onPress={onPress} onPressIn={onPressIn} onPressOut={onPressOut}>
@@ -40,7 +39,7 @@ export const Song = ({item, onPress, onIconPress}) => {
         style={[styles.songPlaylist, {transform: [{scale: scale}]}]}>
         <View style={styles.left}>
           <Image
-            source={{uri: item?.track?.album?.images[0].url}}
+            source={{uri: item?.track?.album?.images[0]?.url}}
             style={styles.iconImage}
           />
           <View style={styles.details}>

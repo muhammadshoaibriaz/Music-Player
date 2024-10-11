@@ -6,7 +6,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
-  ActivityIndicator,
   ToastAndroid,
 } from 'react-native';
 import React, {memo, useContext} from 'react';
@@ -22,6 +21,7 @@ const ITEM_WIDTH = width / 3;
 const ITEM_HEIGHT = ITEM_WIDTH * 1.3;
 
 export const Recommended = memo(({title, data, navigation}) => {
+  const dispatch = useDispatch();
   const {setPlayListName, setBackgroundColor} = useContext(PlayingContext);
   const getRandomColor = () => {
     const getComponent = () => Math.floor(Math.random() * 156);
@@ -32,7 +32,6 @@ export const Recommended = memo(({title, data, navigation}) => {
     setBackgroundColor(bgColor);
     // console.log('bgColor', bgColor);
   };
-  const dispatch = useDispatch();
 
   return (
     <View style={{marginTop: 20}}>
@@ -77,10 +76,14 @@ export const Recommended = memo(({title, data, navigation}) => {
                 </LinearGradient>
               </View>
               <View style={styles.details}>
-                <Text style={styles.title}>{item?.name} </Text>
-                <Text numberOfLines={2} style={styles.subtitle}>
-                  {item?.description}
+                <Text numberOfLines={1} style={styles.title}>
+                  {item?.name}{' '}
                 </Text>
+                {item?.description ? (
+                  <Text numberOfLines={2} style={styles.subtitle}>
+                    {item?.description}
+                  </Text>
+                ) : null}
                 <Text style={{marginTop: 6}}>
                   {item?.type === 'playlist' ? (
                     <View style={styles.playlistStyle}>
@@ -157,8 +160,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   details: {
-    width: '80%',
+    flex: 1,
     paddingLeft: 12,
+    // backgroundColor: 'red',
   },
   listen: {
     fontSize: 10,

@@ -41,19 +41,14 @@ export default function AlbumCard({title, subtitle, data, bottomRef}) {
     },
     [playTrack1, setBackgroundColor],
   );
-  console.log('AllAlbum Component Render ');
+  // console.log('AllAlbum Component Render ');
   return (
     <View style={{marginTop: 10}}>
-      <StatusBar
-        translucent={true}
-        backgroundColor={'#00000060'}
-        animated={true}
-      />
       <View style={styles.header}>
         <Text style={styles.headerTitle}>{title}</Text>
         <TouchableOpacity style={styles.seeAll}>
           <Text style={styles.headerSubtitle}>{subtitle}</Text>
-          <Icon name="arrowright" color={colors.light_text} size={20} />
+          {/* <Icon name="arrowright" color={colors.light_text} size={20} /> */}
         </TouchableOpacity>
       </View>
       <FlatList

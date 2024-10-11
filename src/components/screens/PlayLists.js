@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import {useRef, useState} from 'react';
 import {
   TextInput,
   StatusBar,
@@ -9,27 +9,55 @@ import {
   Image,
   FlatList,
   Dimensions,
+  Animated,
+  LayoutAnimation,
 } from 'react-native';
 import {colors} from '../constants/color';
 import {font} from '../constants/font';
 import {Dialog} from 'react-native-elements';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import IconBtn from '../custom/IconBtn';
+import {useDispatch, useSelector} from 'react-redux';
+import {createPlaylist} from '../reduxtolkit/slices/playlistSlices';
 
-export default function PlayLists() {
+export default function PlayLists({navigation}) {
   // console.log('Explore component render');
+  const dispatch = useDispatch();
 
-  const [playList, setPlayList] = useState([]);
   const [isVisible, setIsVisible] = useState(false);
-  const [inputValue, setInputValue] = useState('PlayList Name #1');
+  const [name, setName] = useState('PlayList Name #1');
+  const [searchBarOpen, setSearchbarOpen] = useState(false);
+  const [query, setQuery] = useState('');
+  const [filteredResults, setFilteredResults] = useState([]);
 
   const handleChange = text => {
-    setInputValue(text);
+    setName(text);
   };
 
-  const createPlayList = newPlayList => {
-    setPlayList(prevPlayLists => [...prevPlayLists, newPlayList]);
-    console.log('playList ares ', playList);
+  const handleCreatePlaylist = () => {
+    dispatch(createPlaylist({name}));
+  };
+
+  const playlists = useSelector(state => state.playlist.playlists);
+  // console.log(playlists);
+
+  const onSearch = text => {
+    setQuery(text);
+    const searchResults = playlists.filter(name =>
+      name.name.toLowerCase().includes(text.toLowerCase()),
+    );
+    // console.log(searchResults);
+    setFilteredResults(searchResults);
+  };
+
+  const value = useRef(new Animated.Value(0)).current;
+  const onPress = () => {
+    Animated.timing(value, {
+      toValue: !searchBarOpen ? 0 : 200,
+      useNativeDriver: false,
+      duration: 200,
+    }).start();
+    setSearchbarOpen(!searchBarOpen);
   };
 
   return (
@@ -41,14 +69,37 @@ export default function PlayLists() {
         showHideTransition={'fade'}
       />
       <View style={styles.authorDetails}>
-        <View style={styles.authorNameIcon}>
-          <Text style={styles.author}>S</Text>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            width: '70%',
+          }}>
+          <View style={styles.authorNameIcon}>
+            <Text style={styles.author}>S</Text>
+          </View>
+          <Animated.View
+            style={[
+              styles.searchBar,
+              {
+                width: value,
+              },
+            ]}>
+            <TextInput
+              placeholder="Search..."
+              value={query}
+              onChangeText={onSearch}
+              style={styles.searchInput}
+              placeholderTextColor={colors.light_text}
+            />
+          </Animated.View>
         </View>
         <View style={styles.iconLinks}>
           <IconBtn
             icon={'search-outline'}
             color={colors.light_text}
             size={26}
+            onPress={onPress}
           />
           <IconBtn
             icon={'add'}
@@ -58,51 +109,68 @@ export default function PlayLists() {
           />
         </View>
       </View>
-      {playList?.length < 1 ? (
+      {playlists?.length < 1 ? (
         <View style={styles.renderPlaylist}>
           <Ionicons
             name={'musical-notes-outline'}
             size={50}
             color={colors.light_text}
           />
-          <Text style={styles.noPlaylist}>No Playlist</Text>
+          <Text style={styles.noPlaylist}>No playlist found</Text>
         </View>
       ) : (
-        <View>
-          {playList.map((item, index) => (
-            <TouchableOpacity
-              activeOpacity={0.6}
-              style={styles.playlist}
-              key={index}>
-              <View style={styles.icon}>
-                <Ionicons
-                  name={'musical-notes'}
-                  size={30}
-                  color={colors.light}
-                />
-              </View>
-              <View style={styles.details}>
-                <Text style={styles.playlistTitleName}>{item}</Text>
-                <Text style={styles.authorName}>{'Shabii'} · PlayList</Text>
-              </View>
-            </TouchableOpacity>
-          ))}
+        <View style={{flex: 1}}>
+          <FlatList
+            data={filteredResults?.length > 0 ? filteredResults : playlists}
+            keyExtractor={(item, index) => index.toString()}
+            contentContainerStyle={{paddingBottom: 60}}
+            removeClippedSubviews={false}
+            showsVerticalScrollIndicator={false}
+            renderItem={({item, index}) => {
+              return (
+                <TouchableOpacity
+                  activeOpacity={0.6}
+                  style={styles.playlist}
+                  onPress={() => navigation.navigate('PlayListSongs', {item})}
+                  key={index}>
+                  <View style={styles.icon}>
+                    <Ionicons
+                      name={'musical-notes'}
+                      size={30}
+                      color={colors.light}
+                    />
+                  </View>
+                  <View style={styles.details}>
+                    <View>
+                      <Text style={styles.playlistTitleName}>{item?.name}</Text>
+                      <Text style={styles.authorName}>
+                        {'Shabii'} · PlayList
+                      </Text>
+                    </View>
+                    <Text style={styles.songs}>
+                      {item?.songs?.length} songs
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+              );
+            }}
+          />
         </View>
       )}
-
       <Dialog
         isVisible={isVisible}
         onDismiss={() => setIsVisible(false)}
         onBackdropPress={() => setIsVisible(false)}
         animationType="fade"
+        removeClippedSubviews={false}
         overlayStyle={styles.overlayStyle}>
         <View style={styles.wrapper}>
-          <Text style={styles.playlistName}>Give your playList a name</Text>
+          <Text style={styles.playlistName}>Give your playlist a name</Text>
           <TextInput
             style={styles.input}
             onChangeText={handleChange}
-            value={inputValue}
-            defaultValue={inputValue}
+            value={name}
+            defaultValue={name}
             autoFocus={true}
             numberOfLines={1}
             showSoftInputOnFocus={true}
@@ -111,7 +179,8 @@ export default function PlayLists() {
           <TouchableOpacity
             style={styles.btnContainer}
             onPress={() => {
-              createPlayList(inputValue);
+              // createPlayList(inputValue);
+              handleCreatePlaylist();
               setIsVisible(false);
             }}>
             <Text style={styles.btnText}>Create</Text>
@@ -165,6 +234,8 @@ const styles = StyleSheet.create({
   details: {
     flex: 1,
     paddingLeft: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   authorName: {
     color: colors.light_text,
@@ -256,5 +327,25 @@ const styles = StyleSheet.create({
   },
   renderPlaylist: {flex: 1, justifyContent: 'center', alignItems: 'center'},
 
+  songs: {
+    color: colors.light_text,
+    position: 'absolute',
+    right: 14,
+    fontFamily: font.Montserrat_Medium,
+  },
+  searchBar: {
+    borderRadius: 50,
+    position: 'relative',
+    height: 40,
+    marginLeft: 8,
+    backgroundColor: '#ffffff10',
+  },
+  searchInput: {
+    flex: 1,
+    height: '100%',
+    paddingLeft: 12,
+    fontFamily: font.Montserrat_Regular,
+    color: colors.light,
+  },
   // Playlist styles
 });

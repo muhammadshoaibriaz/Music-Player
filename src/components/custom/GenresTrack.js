@@ -34,7 +34,9 @@ export const GenresTrack = ({item, navigation, onPress}) => {
         />
       </View>
       <View style={styles.details}>
-        <Text style={styles.albumName}>{item?.name}</Text>
+        <Text numberOfLines={3} style={styles.albumName}>
+          {item?.name}
+        </Text>
         <View
           style={{
             width: '100%',

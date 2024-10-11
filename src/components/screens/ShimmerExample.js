@@ -45,6 +45,8 @@ export const ShimmerExample = () => {
         <FlatList
           data={album}
           horizontal
+          removeClippedSubviews={false}
+          keyExtractor={(item, index) => index.toString()}
           showsHorizontalScrollIndicator={false}
           renderItem={(item, index) => (
             <ShimmerPlaceholder
@@ -191,6 +193,8 @@ export const RecentShimmer = () => {
       <FlatList
         data={album}
         horizontal
+        removeClippedSubviews={false}
+        keyExtractor={(item, index) => index.toString()}
         showsHorizontalScrollIndicator={false}
         renderItem={(item, index) => (
           <ShimmerPlaceholder
@@ -228,6 +232,8 @@ export const RecommendedShimmer = () => {
       </View>
       <FlatList
         data={album}
+        removeClippedSubviews={false}
+        keyExtractor={(item, index) => index.toString()}
         showsVerticalScrollIndicator={false}
         renderItem={(item, index) => (
           <View style={styles.recommendedShimmer}>
@@ -275,6 +281,7 @@ export const ArtistShimmer = () => {
       <FlatList
         data={album}
         horizontal
+        removeClippedSubviews={false}
         showsHorizontalScrollIndicator={false}
         renderItem={(item, index) => (
           <View style={styles.artistShimmer}>
