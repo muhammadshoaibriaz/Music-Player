@@ -12,6 +12,8 @@ import MAterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Entypo from 'react-native-vector-icons/Entypo';
 import {colors} from '../../constants/color';
 import {font} from '../../constants/font';
+import {useContext} from 'react';
+import {PlayingContext} from '../../context/PlayingContext';
 
 const {width} = Dimensions.get('screen');
 const ITEM_WIDTH = width / 3;
@@ -20,6 +22,16 @@ export const PlayList = ({data, navigation}) => {
   console.log('data is ', data);
   // const {items} = data;
   // console.log();
+  const {setBackgroundColor} = useContext(PlayingContext);
+  const getRandomColor = () => {
+    const getComponent = () => Math.floor(Math.random() * 156);
+    const r = getComponent();
+    const g = getComponent();
+    const b = getComponent();
+    const bgColor = `rgb(${r}, ${g}, ${b})`;
+    setBackgroundColor(bgColor);
+    // console.log('bgColor', bgColor);
+  };
   return (
     <View style={{flex: 1}}>
       <FlatList
@@ -32,7 +44,10 @@ export const PlayList = ({data, navigation}) => {
           // console.log('my data is is ', item);
           return (
             <Pressable
-              onPress={() => navigation.navigate('PlayList', {item})}
+              onPress={() => {
+                navigation.navigate('PlayList', {item});
+                getRandomColor();
+              }}
               style={styles.iconImage}>
               <View>
                 <LinearGradient

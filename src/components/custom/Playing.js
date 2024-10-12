@@ -17,10 +17,13 @@ import * as Animatable from 'react-native-animatable';
 import {addFavorite} from '../reduxtolkit/slices/favoriteSlice';
 
 export default function Playing({artist, title, imageUrl, onPress, style}) {
+  useEffect(() => {
+    console.log('backgroundColor is ', backgroundColor);
+  }, [backgroundColor]);
   const {
-    isPlaying,
     pauseSong,
     resumeSong,
+    isPlaying,
     currentTrack,
     backgroundColor,
     isPause,
@@ -31,7 +34,7 @@ export default function Playing({artist, title, imageUrl, onPress, style}) {
   return (
     <Pressable onPress={onPress}>
       <Animatable.View
-        style={[styles.container, {backgroundColor: backgroundColor}]}
+        style={[styles.container, {backgroundColor: backgroundColor || 'navy'}]}
         animation={'slideInUp'}>
         <View style={styles.album}>
           <Image
@@ -44,10 +47,10 @@ export default function Playing({artist, title, imageUrl, onPress, style}) {
           />
           <View style={styles.songDetails}>
             <Animated.Text numberOfLines={1} style={[styles.songName]}>
-              {title || 'Item name which is playing'}
+              {title || "That's my name that's my name"}
             </Animated.Text>
             <Text numberOfLines={1} style={styles.artistName}>
-              {artist || 'Artist Name'}
+              {artist || 'Artist · Akcent'}
             </Text>
           </View>
         </View>
@@ -60,14 +63,12 @@ export default function Playing({artist, title, imageUrl, onPress, style}) {
               dispatch(addFavorite(currentTrack));
             }}
           />
-          {isPlaying && (
-            <IconBtn
-              icon={isPause ? 'play-sharp' : 'pause-outline'}
-              color={'#fff'}
-              size={20}
-              onPress={isPause ? resumeSong : pauseSong}
-            />
-          )}
+          <IconBtn
+            icon={isPause || !isPlaying ? 'play-sharp' : 'pause-outline'}
+            color={'#fff'}
+            size={20}
+            onPress={isPause ? resumeSong : pauseSong}
+          />
         </View>
       </Animatable.View>
     </Pressable>

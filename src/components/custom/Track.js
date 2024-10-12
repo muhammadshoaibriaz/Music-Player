@@ -75,6 +75,7 @@ export const Track = ({item, onPress, onIconPress}) => {
           color={colors.light}
           size={20}
           onPress={onIconPress}
+          // iconStyle={{color: '#444'}}
         />
       </Animated.View>
     </Pressable>

@@ -82,7 +82,7 @@ export default function Home({navigation}) {
       }
     };
     getUserMood();
-  }, [userMood]);
+  }, [userMood, backgroundColor]);
   console.log('mood from home is ', userMood);
 
   useEffect(() => {
@@ -239,8 +239,14 @@ export default function Home({navigation}) {
   };
 
   // Context Api
-  const {playingTitle, artistName, playingImage, isPlaying, items} =
-    useContext(PlayingContext);
+  const {
+    playingTitle,
+    artistName,
+    playingImage,
+    isPlaying,
+    items,
+    backgroundColor,
+  } = useContext(PlayingContext);
   // console.log('Home color', backgroundColor);
 
   // Refresh component
@@ -371,17 +377,16 @@ export default function Home({navigation}) {
           )}
         </ScrollView>
       </View>
-      {isPlaying && (
-        <Playing
-          artist={artistName}
-          title={playingTitle}
-          imageUrl={playingImage}
-          onPress={() => {
-            bottomRef.current.open();
-            // console.log('item is', item?.track?.duration_ms);
-          }}
-        />
-      )}
+      <Playing
+        style={{backgroundColor: backgroundColor}}
+        artist={artistName}
+        title={playingTitle}
+        imageUrl={playingImage}
+        onPress={() => {
+          bottomRef.current.open();
+          // console.log('item is', item?.track?.duration_ms);
+        }}
+      />
       <BottomComponent bottomRef={bottomRef} item={items} />
     </View>
   );

@@ -56,17 +56,6 @@ export default function PlayList({route, navigation}) {
     fetchTracks();
   }, []);
 
-  // Random color generator function
-  const getRandomColor = () => {
-    const getComponent = () => Math.floor(Math.random() * 156);
-    const r = getComponent();
-    const g = getComponent();
-    const b = getComponent();
-    const bgColor = `rgb(${r}, ${g}, ${b})`;
-    setBackgroundColor(bgColor);
-    // console.log('bgColor', bgColor);
-  };
-
   // Playing Context API Callbacks
   const handlePlaySong = useCallback(
     item => {
@@ -220,7 +209,7 @@ export default function PlayList({route, navigation}) {
         <Animated.Text
           numberOfLines={1}
           style={[styles.artistName, {fontSize: 16, opacity}]}>
-          {item?.name}
+          {item?.name?.slice(0, 34) + '...'}
         </Animated.Text>
       </Animated.View>
       <View style={{flex: 1}}>
@@ -297,17 +286,15 @@ export default function PlayList({route, navigation}) {
           </View>
         )}
       </View>
-      {isPlaying && (
-        <Playing
-          key={'playlist'}
-          artist={artistName}
-          imageUrl={playingImage}
-          title={playingTitle}
-          onPress={() => {
-            bottomRef.current.open();
-          }}
-        />
-      )}
+      <Playing
+        key={'playlist'}
+        artist={artistName}
+        imageUrl={playingImage}
+        title={playingTitle}
+        onPress={() => {
+          bottomRef.current.open();
+        }}
+      />
       <BottomComponent bottomRef={bottomRef} item={items} />
       <BottomSheet
         ref={bottomRef1}

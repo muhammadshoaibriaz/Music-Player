@@ -5,17 +5,13 @@ import {colors} from '../../constants/color';
 import {useCallback, useContext} from 'react';
 import {PlayingContext} from '../../context/PlayingContext';
 export const Tracks = ({data}) => {
-  console.log('tracks data', data);
-  const onPress = () => {};
-  const {playTrack1} = useContext(PlayingContext);
-  const handlePlaySong = useCallback(
-    item => {
-      // console.log('song is ', item?.track);
-      playTrack1(item?.track);
-      getRandomColor();
-    },
-    [playTrack1],
-  );
+  // console.log('tracks data', data);
+  const {playTrack1, items, setItems} = useContext(PlayingContext);
+  const handlePlaySong = useCallback(item => {
+    // console.log('song is ', item?.preview_url);
+    // console.log(items);
+    playTrack1(item);
+  }, []);
   return (
     <View style={{flex: 1}}>
       <FlatList
@@ -24,9 +20,14 @@ export const Tracks = ({data}) => {
         contentContainerStyle={{paddingHorizontal: 14}}
         removeClippedSubviews={false}
         renderItem={({item, index}) => {
-          console.log('my data is is ', item);
+          // console.log('my data is is ', item);
           return (
-            <Pressable onPress={onPress} style={styles.iconImage}>
+            <Pressable
+              onPress={() => {
+                handlePlaySong(item);
+                setItems(item);
+              }}
+              style={styles.iconImage}>
               <View>
                 <LinearGradient
                   colors={['transparent', '#00000080']}
@@ -40,7 +41,15 @@ export const Tracks = ({data}) => {
                 />
               </View>
               <View style={styles.details}>
-                <Text numberOfLines={2} style={styles.albumName}>
+                <Text
+                  numberOfLines={2}
+                  style={[
+                    styles.albumName,
+                    {
+                      color:
+                        items?.id === item?.id ? 'chocolate' : colors.light,
+                    },
+                  ]}>
                   {item?.name}
                 </Text>
                 <Text numberOfLines={3} style={styles.artist}>

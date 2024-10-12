@@ -88,13 +88,13 @@ const FaceDetection = ({navigation}) => {
   };
 
   const detectFace = async imageUri => {
-    setAlbums([]);
-    setArtists([]);
-    setPlaylist([]);
-    setTracks([]);
-    console.log('albums empty ', albums);
-    console.log('playlist empty ', playlist);
-    console.log('tracks empty ', tracks);
+    // setAlbums([]);
+    // setArtists([]);
+    // setPlaylist([]);
+    // setTracks([]);
+    // console.log('albums empty ', albums);
+    // console.log('playlist empty ', playlist);
+    // console.log('tracks empty ', tracks);
     try {
       const faces = await faceDetection.detect(imageUri, {
         contourMode: 'all',
@@ -178,7 +178,6 @@ const FaceDetection = ({navigation}) => {
       setAlbums(data?.albums?.items);
       setTracks(data?.tracks?.items);
       setArtists(data?.artists?.items);
-      setLoading(false);
     } catch (error) {
       console.log('Error while', error);
     } finally {
@@ -275,9 +274,9 @@ const FaceDetection = ({navigation}) => {
                   </TouchableOpacity>
                 ))}
               </View>
-              {renderComponent()}
             </>
           )}
+          {renderComponent()}
         </>
       )}
     </View>
