@@ -61,10 +61,10 @@ export default function Home({navigation}) {
   // States
   const [userProfile, setUserProfile] = useState(null);
   const [recentlyPlayed, setRecentlyPlayed] = useState([]);
-  // const [favorite, setFavorite] = useState([]);
+  const [favorite, setFavorite] = useState([]);
   // const [featured, setFeatured] = useState([]);
   // const [artists, setArtists] = useState([]);
-  // const [newSongs, setNewSongs] = useState([]);
+  const [newSongs, setNewSongs] = useState([]);
   // mood Data
   const [artists1, setArtists1] = useState([]);
   const [albums, setAlbums] = useState([]);
@@ -83,13 +83,14 @@ export default function Home({navigation}) {
     };
     getUserMood();
   }, [userMood, backgroundColor]);
-  console.log('mood from home is ', userMood);
+  // console.log('mood from home is ', userMood);
 
   useEffect(() => {
     const fetchData = async () => {
       fetchResults();
       fetchRecentlyPlayedSongs();
       fetchUserProfile();
+      favoriteSongs();
       // featuredPlaylist();
     };
     fetchData();
@@ -320,7 +321,7 @@ export default function Home({navigation}) {
             <RecentShimmer />
           ) : (
             <AlbumCard
-              title={'Recently Played'}
+              title={'Recent release'}
               // subtitle={'See All'}
               navigation={navigation}
               data={recentlyPlayed}

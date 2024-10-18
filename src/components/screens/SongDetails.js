@@ -1,12 +1,9 @@
 import {
   View,
   Text,
-  Image,
   StyleSheet,
-  FlatList,
   ActivityIndicator,
   Dimensions,
-  Pressable,
   Animated,
   StatusBar,
 } from 'react-native';
@@ -24,9 +21,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Playing from '../custom/Playing';
 import {PlayingContext} from '../context/PlayingContext';
 import IconBtn from '../custom/IconBtn';
-import Entypo from 'react-native-vector-icons/Entypo';
-import MAterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import {Song} from '../custom/Song';
 import {Track} from '../custom/Track';
 
 const {width} = Dimensions.get('screen');
@@ -60,7 +54,6 @@ export default function SongDetails({route, navigation}) {
 
   const {
     playingTitle,
-    playTrack1,
     artistName,
     playingImage,
     backgroundColor,
@@ -77,33 +70,12 @@ export default function SongDetails({route, navigation}) {
     }
   }, []);
 
-  const handlePlayPause = useCallback(
-    item => {
-      playTrack1(item?.track);
-    },
-    [playTrack1],
-  );
-
   // console.log('SongDetails component render');
   const scrollY = useRef(new Animated.Value(0)).current;
   const scale = scrollY.interpolate({
     inputRange: [0, 350],
     outputRange: [1, 0],
   });
-
-  const scale1 = useRef(new Animated.Value(1)).current;
-  const onPressIn = () => {
-    Animated.spring(scale1, {
-      toValue: 0.98,
-      useNativeDriver: true,
-    }).start();
-  };
-  const onPressOut = () => {
-    Animated.spring(scale1, {
-      toValue: 1,
-      useNativeDriver: true,
-    }).start();
-  };
 
   return (
     <View style={{flex: 1}}>
@@ -128,7 +100,7 @@ export default function SongDetails({route, navigation}) {
           <Animated.FlatList
             data={tracks}
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{paddingBottom: 80}}
+            contentContainerStyle={{paddingBottom: isPlaying ? 120 : 80}}
             removeClippedSubviews={false}
             keyExtractor={(item, index) => index.toString()}
             onScroll={Animated.event(
