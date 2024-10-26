@@ -1,4 +1,4 @@
-import React from 'react';
+/* eslint-disable react/react-in-jsx-scope */
 import {Provider} from 'react-redux';
 import store from './src/components/reduxtolkit/store';
 import {PlayingProvider} from './src/components/context/PlayingContext';
@@ -14,75 +14,78 @@ export default function App() {
   );
 }
 
-// import AsyncStorage from '@react-native-async-storage/async-storage';
-// import React, {useState} from 'react';
-// import {View, Text, Button, ActivityIndicator} from 'react-native';
+// import React, {useEffect, useRef, useState} from 'react';
+// import {Camera, useCameraDevices} from 'react-native-vision-camera';
+// import {StyleSheet, View, Button, Text, Alert} from 'react-native';
 
 // const App = () => {
-//   const [orderStatus, setOrderStatus] = useState(
-//     'Order has not been placed yet.',
-//   );
-//   const [loading, setLoading] = useState(false);
+//   const camera = useRef(null);
+//   const [hasPermission, setHasPermission] = useState(false);
+//   const devices = useCameraDevices();
+//   const device = devices.back; // Use the back camera if available
 
-//   const orderFood = async () => {
-//     setLoading(true);
-//     const token = await AsyncStorage.getItem('token');
-//     return new Promise((resolve, reject) => {
-//       fetch(
-//         'https://api.spotify.com/v1/artists/6U5BSRuKoLbpIoYJMdmNT2/top-tracks',
-//         {
-//           method: 'GET',
-//           headers: {
-//             Authorization: `Bearer ${token}`,
-//             'Content-Type': 'application/json',
-//           },
-//         },
-//       )
-//         .then(res => {
-//           if (!res.ok) {
-//             throw new Error('Network response was not ok');
-//           }
-//           return res.json();
-//         })
-//         .then(data => {
-//           console.log(data);
-//           setOrderStatus('Request Accepted and we are preparing your order!');
-//           setTimeout(() => {
-//             if (data) {
-//               return resolve('Order has been placed successfully!');
-//             } else {
-//               return reject('Request failed');
-//             }
-//           }, 2000);
-//         })
-//         .catch(error => {
-//           console.log('Error while fetching data:', error);
-//           reject('Failed to fetch data');
+//   useEffect(() => {
+//     const requestPermission = async () => {
+//       const status = await Camera.requestCameraPermission();
+//       if (status === 'denied') {
+//         Alert.alert(
+//           'Permission Denied',
+//           'Camera permission is required to use this feature.',
+//         );
+//       }
+//       setHasPermission(status === 'authorized');
+//     };
+
+//     requestPermission();
+//   }, []);
+
+//   useEffect(() => {
+//     console.log('Available devices:', devices); // Log all devices
+//   }, [devices]);
+
+//   // Handle the loading state while the camera is being fetched
+//   if (device == null) {
+//     return <Text>Loading...</Text>;
+//   }
+
+//   const takePhoto = async () => {
+//     if (camera.current) {
+//       try {
+//         const photo = await camera.current.takePhoto({
+//           flash: 'on',
+//           qualityPrioritization: 'quality',
 //         });
-//     });
+//         console.log(photo); // Log the photo data
+//       } catch (error) {
+//         console.error('Error taking photo:', error); // Log any errors
+//       }
+//     }
 //   };
 
-//   const handleOrder = () => {
-//     setOrderStatus('Sending request...');
-//     orderFood()
-//       .then(message => {
-//         setOrderStatus(message);
-//       })
-//       .catch(error => {
-//         setOrderStatus(error);
-//       })
-//       .finally(() => {
-//         setLoading(false);
-//       });
-//   };
+//   // Check if permission has been granted
+//   if (!hasPermission) {
+//     return <Text>No access to camera</Text>;
+//   }
 
 //   return (
-//     <View style={{padding: 20}}>
-//       <Text style={{fontSize: 20, marginBottom: 20}}>{orderStatus}</Text>
-//       {loading && <ActivityIndicator size="large" color="#0000ff" />}
-//       {!loading && <Button title="Order Food" onPress={handleOrder} />}
+//     <View style={styles.container}>
+//       <Camera
+//         style={StyleSheet.absoluteFill}
+//         ref={camera}
+//         device={device}
+//         isActive={true}
+//         photo={true}
+//       />
+//       <Button title="Take Photo" onPress={takePhoto} />
 //     </View>
 //   );
 // };
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     justifyContent: 'center',
+//   },
+// });
 
 // export default App;

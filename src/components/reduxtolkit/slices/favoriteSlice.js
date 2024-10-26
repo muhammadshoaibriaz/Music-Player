@@ -6,7 +6,6 @@ const favoriteSlice = createSlice({
   initialState,
   reducers: {
     addFavorite: (state, action) => {
-      // how to prevent from duplication
       if (!state.find(item => item.id === action.payload.id)) {
         state.push(action.payload);
         ToastAndroid.show('Added to favorite!', 3000);
