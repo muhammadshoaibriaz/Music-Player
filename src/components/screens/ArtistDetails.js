@@ -30,7 +30,7 @@ export default function ArtistDetails({route, navigation}) {
   const {item, details} = route.params;
   const id = item?.id;
   const artistId = details?.album?.artists[0]?.id;
-  console.log('artist data is ', details?.album);
+  // console.log('artist data is ', details?.album);
   // console.log('artist id is ', id);
 
   useEffect(() => {

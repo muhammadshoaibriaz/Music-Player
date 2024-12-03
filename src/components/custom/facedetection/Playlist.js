@@ -19,7 +19,7 @@ const {width} = Dimensions.get('screen');
 const ITEM_WIDTH = width / 3;
 
 export const PlayList = ({data, navigation}) => {
-  console.log('data is ', data);
+  // console.log('data is ', data);
   // const {items} = data;
   // console.log();
   const {setBackgroundColor} = useContext(PlayingContext);

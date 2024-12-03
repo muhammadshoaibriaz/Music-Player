@@ -46,7 +46,7 @@ export default function Genres({route, navigation}) {
     }
   };
 
-  console.log('Genres component render');
+  // console.log('Genres component render');
   return (
     <View style={styles.container}>
       <StatusBar translucent={false} backgroundColor={colors.light_dark} />

@@ -6,7 +6,7 @@ const favoriteSlice = createSlice({
   initialState,
   reducers: {
     addFavorite: (state, action) => {
-      if (!state.find(item => item.id === action.payload.id)) {
+      if (!state.find(item => item?.id === action.payload?.id)) {
         state.push(action.payload);
         ToastAndroid.show('Added to favorite!', 3000);
       } else {
@@ -15,7 +15,7 @@ const favoriteSlice = createSlice({
     },
     removeFavorite: (state, action) => {
       ToastAndroid.show('Remove from favorite!', 3000);
-      return state.filter(item => item.id !== action.payload?.id);
+      return state.filter(item => item?.id !== action.payload?.id);
     },
   },
 });

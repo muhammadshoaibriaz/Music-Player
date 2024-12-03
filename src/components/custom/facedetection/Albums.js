@@ -17,7 +17,7 @@ const {width} = Dimensions.get('screen');
 const ITEM_WIDTH = width / 3;
 
 export const Albums = ({data, navigation}) => {
-  console.log('album data is ', data);
+  // console.log('album data is ', data);
   // const {items} = data;
   // console.log();
   return (

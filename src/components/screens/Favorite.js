@@ -21,6 +21,7 @@ import {FavoriteSong} from '../custom/FavoriteSong';
 import Icon from 'react-native-vector-icons/AntDesign';
 import {removeFavorite} from '../reduxtolkit/slices/favoriteSlice';
 import LinearGradient from 'react-native-linear-gradient';
+import {removePlayList} from '../reduxtolkit/slices/playListSlice';
 const {width} = Dimensions.get('screen');
 const ITEM_WIDTH = width / 3;
 const ITEM_HEIGHT = ITEM_WIDTH * 1.3;
@@ -28,6 +29,7 @@ const ITEM_HEIGHT = ITEM_WIDTH * 1.3;
 const FavoriteSongs = () => {
   const favoriteSongs = useSelector(state => state.favorite);
   const dispatch = useDispatch();
+  console.log(favoriteSongs);
 
   // ContextAPI
   const {playTrack1} = useContext(PlayingContext);
@@ -60,6 +62,7 @@ const FavoriteSongs = () => {
 const FavoritePlayLists = ({navigation}) => {
   const playlistData = useSelector(state => state.playlist.playList);
   // console.log('playlistData is ', playlistData);
+  const dispatch = useDispatch();
   return (
     <View style={{flex: 1}}>
       <FlatList
@@ -77,10 +80,9 @@ const FavoritePlayLists = ({navigation}) => {
             <TouchableOpacity
               style={styles.card}
               key={index}
+              onLongPress={() => dispatch(removePlayList(item))}
               onPress={() => {
                 navigation.navigate('FavPlayList', {item});
-                // setPlayListName(item?.name);
-                // getRandomColor();
               }}>
               <View style={styles.imageCard}>
                 <Image

@@ -203,7 +203,7 @@ export default function Search({navigation}) {
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{paddingBottom: 60}}
                 renderItem={({item, index}) => {
-                  console.log('item is ', item);
+                  // console.log('item is ', item);
                   return (
                     <TouchableOpacity
                       style={styles.track}

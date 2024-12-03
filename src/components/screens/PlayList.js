@@ -328,6 +328,7 @@ export default function PlayList({route, navigation}) {
               onPress={() => {
                 bottomRef1.current.close();
                 dispatch(addFavorite(details));
+                // console.log('details', details);
               }}
               icon={'heart-outline'}
               title={'Add To Favorite'}

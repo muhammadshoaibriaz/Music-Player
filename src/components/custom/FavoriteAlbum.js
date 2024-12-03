@@ -18,8 +18,8 @@ import {PlayingContext} from '../context/PlayingContext';
 import BottomComponent from './BottomComponent';
 
 const {width} = Dimensions.get('screen');
-const ITEM_WIDTH = width / 3;
-const ITEM_HEIGHT = ITEM_WIDTH;
+const ITEM_WIDTH = width / 4;
+const ITEM_HEIGHT = ITEM_WIDTH * 1.3;
 const SPACING = 14;
 
 export default function ForyouAlbum({title, subtitle, data}) {

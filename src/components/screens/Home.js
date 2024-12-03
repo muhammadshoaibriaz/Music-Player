@@ -61,10 +61,6 @@ export default function Home({navigation}) {
   // States
   const [userProfile, setUserProfile] = useState(null);
   const [recentlyPlayed, setRecentlyPlayed] = useState([]);
-  const [favorite, setFavorite] = useState([]);
-  // const [featured, setFeatured] = useState([]);
-  // const [artists, setArtists] = useState([]);
-  const [newSongs, setNewSongs] = useState([]);
   // mood Data
   const [artists1, setArtists1] = useState([]);
   const [albums, setAlbums] = useState([]);
@@ -90,8 +86,6 @@ export default function Home({navigation}) {
       fetchResults();
       fetchRecentlyPlayedSongs();
       fetchUserProfile();
-      favoriteSongs();
-      // featuredPlaylist();
     };
     fetchData();
   }, [userMood]);
@@ -209,34 +203,8 @@ export default function Home({navigation}) {
   const getArtists = async () => {
     const token = await AsyncStorage.getItem('token');
     const data = await fetchArtists(token);
-    // console.log('Artist data is ', data);
-    setArtists(data?.artists?.items);
-  };
-
-  // new Releases
-  const newReleases = async () => {
-    const token = await AsyncStorage.getItem('token');
-    const data = await fetchNewReleases(token);
-    // console.log("new songs data is", newSongs)
-    setNewSongs(data?.albums?.items);
-  };
-
-  // favorite Songs
-  const favoriteSongs = async () => {
-    const token = await AsyncStorage.getItem('token');
-    // console.log(token);
-    const data = await fetchFavoriteArtistTracks(token);
-    setFavorite(data?.tracks);
-    // console.log('favorite songs data is ', favorite);
-  };
-
-  // featured Songs
-  const featuredPlaylist = async () => {
-    const token = await AsyncStorage.getItem('token');
-    console.log(token);
-    const data = await fetchFeaturedPlaylists(token);
-    // console.log('Featured playlist data is ', data);
-    setFeatured(data?.playlists?.items);
+    console.log('Artist data is ', data);
+    // setArtists(data?.artists?.items);
   };
 
   // Context Api

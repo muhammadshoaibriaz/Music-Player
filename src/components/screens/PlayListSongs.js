@@ -41,7 +41,7 @@ export default function PlayListSongs({route, navigation}) {
         showsVerticalScrollIndicator={false}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({item}) => {
-          console.log(item);
+          // console.log(item);
           return (
             <Pressable
               onPress={() => {}}

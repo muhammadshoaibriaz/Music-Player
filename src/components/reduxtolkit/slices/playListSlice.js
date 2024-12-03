@@ -12,7 +12,10 @@ const playListSlice = createSlice({
       // console.log('state is', state);
     },
     removePlayList: (state, action) => {
-      return state.filter(item => item.id !== action.payload?.id);
+      state.playList = state.playList.filter(
+        item => item.id !== action.payload.id,
+      );
+      return state;
     },
   },
 });

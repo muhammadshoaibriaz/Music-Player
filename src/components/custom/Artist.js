@@ -35,7 +35,7 @@ export default function Artist({data, navigation}) {
           <TouchableOpacity
             style={styles.card}
             key={index}
-            onPress={() => navigation.navigate('ArtistDetails')}>
+            onPress={() => navigation.navigate('ArtistDetails', {item})}>
             <Image
               source={{uri: item?.images[0]?.url}}
               style={styles.cardImage}

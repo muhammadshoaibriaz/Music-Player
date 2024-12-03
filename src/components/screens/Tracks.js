@@ -49,7 +49,7 @@ export default function Tracks({route, navigation}) {
   const playSong = useCallback(track => {
     try {
       playArtistSong(track);
-      console.log('track', track);
+      // console.log('track', track);
     } catch (error) {
       console.log('Error while playing song', error);
     }

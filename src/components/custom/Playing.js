@@ -17,9 +17,6 @@ import * as Animatable from 'react-native-animatable';
 import {addFavorite} from '../reduxtolkit/slices/favoriteSlice';
 
 export default function Playing({artist, title, imageUrl, onPress, style}) {
-  useEffect(() => {
-    console.log('backgroundColor is ', backgroundColor);
-  }, [backgroundColor]);
   const {
     pauseSong,
     resumeSong,
@@ -29,7 +26,7 @@ export default function Playing({artist, title, imageUrl, onPress, style}) {
     isPause,
   } = useContext(PlayingContext);
   const dispatch = useDispatch();
-  // console.log('background color from playing', backgroundColor);
+  // console.log('background color from playing', currentTrack);
 
   return (
     <Pressable onPress={onPress}>

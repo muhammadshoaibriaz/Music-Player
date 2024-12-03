@@ -14,7 +14,7 @@ const ITEM_WIDTH = 50;
 const SPACING = 14;
 
 export const Artist = ({data, navigation}) => {
-  console.log('Artist Data is', data);
+  // console.log('Artist Data is', data);
   return (
     <View>
       <FlatList

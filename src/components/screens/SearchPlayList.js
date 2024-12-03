@@ -44,11 +44,11 @@ export default function SearchPlayList({route, navigation}) {
       console.log('Error while fetching data', error.message);
     }
   };
-  console.log('SearchPlayList component render');
+  // console.log('SearchPlayList component render');
   return (
     <View style={{flex: 1}}>
       <View style={{flex: 1}}>
-        {playlists.length < 1 ? (
+        {playlists?.length < 1 ? (
           <View style={styles.activityIndicator}>
             <ActivityIndicator
               style={{bottom: 40}}
