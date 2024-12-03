@@ -38,7 +38,7 @@ export default function PlayLists({navigation}) {
     dispatch(createPlaylist({name}));
   };
 
-  const playlists = useSelector(state => state.playlist.playlists);
+  const playlists = useSelector(state => state.createPlaylist.playlists);
   // console.log(playlists);
 
   const onSearch = text => {

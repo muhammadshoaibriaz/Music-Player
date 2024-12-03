@@ -94,6 +94,12 @@ android {
         ]
     }
     signingConfigs {
+        release {
+            storeFile file('my-release-key.keystore') // Path to keystore file
+            storePassword 'shabii'
+            keyAlias 'my-key-alias'
+            keyPassword 'shabii'
+        }
         debug {
             storeFile file('debug.keystore')
             storePassword 'android'

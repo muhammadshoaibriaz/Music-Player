@@ -1,14 +1,31 @@
-import {configureStore} from '@reduxjs/toolkit';
+import {persistReducer, persistStore} from 'redux-persist';
+import {combineReducers, configureStore} from '@reduxjs/toolkit';
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import favoriteSlice from './slices/favoriteSlice';
 import playListSlice from './slices/playListSlice';
 import playlistSlices from './slices/playlistSlices';
+import createPlaylistSlice from './slices/playlistSlices';
 
-const store = configureStore({
-  reducer: {
-    favorite: favoriteSlice,
-    playlists: playListSlice,
-    playlist: playlistSlices,
-  },
+const persistConfig = {
+  key: 'root',
+  storage: AsyncStorage,
+};
+
+const rootReducer = combineReducers({
+  favorite: favoriteSlice.reducer,
+  playlist: playListSlice.reducer,
+  createPlaylist: createPlaylistSlice.reducer,
 });
 
-export default store;
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+export const store = configureStore({
+  reducer: persistedReducer,
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
+});
+
+export const persistor = persistStore(store);

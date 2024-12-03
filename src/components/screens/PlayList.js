@@ -6,7 +6,6 @@ import {
   ActivityIndicator,
   Image,
   StatusBar,
-  Alert,
   ToastAndroid,
   PanResponder,
   TouchableOpacity,
@@ -72,14 +71,10 @@ export default function PlayList({route, navigation}) {
     playingImage,
     items,
     playTrack1,
-    isPlaying,
-    setBackgroundColor,
     backgroundColor,
     setItems,
     setTrack,
     setCurrentTrackIndex,
-    currentTrack,
-    setCurrentTrack,
   } = useContext(PlayingContext);
   // console.log('from playlist ', backgroundColor);
 
@@ -111,12 +106,6 @@ export default function PlayList({route, navigation}) {
   const scale = scrollY.interpolate({
     inputRange: [0, 200],
     outputRange: [1, 0.4],
-    extrapolate: 'clamp',
-  });
-
-  const blur = scrollY.interpolate({
-    inputRange: [0, 300],
-    outputRange: [0, 40],
     extrapolate: 'clamp',
   });
 
@@ -181,21 +170,14 @@ export default function PlayList({route, navigation}) {
   ).current;
   // Danger Zone ⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️⚠️
 
-  const playlist = useSelector(state => state.playlist.playlists);
-  // console.log('playlist', playlist);
+  const playlist = useSelector(state => state.createPlaylist.playlists);
   const handleAddSong = (playlistId, song) => {
-    // const song = {
-    //   id: new Date().toISOString(),
-    //   name: 'I am not in love',
-    // };
     if (playlistId) {
       dispatch(addSongToPlaylist({playlistId, song}));
       setVisible(false);
       ToastAndroid.show('Song added to playlist', 3000);
     }
   };
-
-  // console.log('PlayList component render');
   return (
     <View style={{flex: 1}}>
       <StatusBar backgroundColor={backgroundColor} translucent={false} />
@@ -222,6 +204,7 @@ export default function PlayList({route, navigation}) {
             <Animated.FlatList
               ref={scrollY}
               data={tracks}
+              // onLayout={e => setMainHeight(e.nativeEvent.layout.height)}
               removeClippedSubviews={false}
               keyExtractor={(item, index) => index.toString()}
               onScroll={Animated.event(
@@ -268,8 +251,15 @@ export default function PlayList({route, navigation}) {
                 </Animated.View>
               }
               renderItem={({item, index}) => {
-                // console.log(item?.track?.preview_url);
+                console.log(item?.track);
                 return (
+                  // <Animated.View
+                  //   style={[
+                  //     styles.scrollView,
+                  //     {transform: [{translateY: scrolling}]},
+                  //   ]}
+                  //   {...panResponder.panHandlers}
+                  //   onLayout={e => setHeight(e.nativeEvent.layout.height)}>
                   <Song
                     item={item}
                     key={index}
@@ -280,6 +270,7 @@ export default function PlayList({route, navigation}) {
                       setItems(item);
                     }}
                   />
+                  // </Animated.View>
                 );
               }}
             />

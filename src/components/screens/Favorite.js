@@ -58,7 +58,7 @@ const FavoriteSongs = () => {
 };
 
 const FavoritePlayLists = ({navigation}) => {
-  const playlistData = useSelector(state => state.playlists.playList);
+  const playlistData = useSelector(state => state.playlist.playList);
   // console.log('playlistData is ', playlistData);
   return (
     <View style={{flex: 1}}>

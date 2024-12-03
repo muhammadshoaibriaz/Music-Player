@@ -18,4 +18,4 @@ const playListSlice = createSlice({
 });
 
 export const {addPlayList, removePlayList} = playListSlice.actions;
-export default playListSlice.reducer;
+export default playListSlice;

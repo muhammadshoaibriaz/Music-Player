@@ -4,8 +4,8 @@ const initialState = {
   playlists: [],
 };
 
-const playlistSlices = createSlice({
-  name: 'playlist',
+const createPlaylistSlice = createSlice({
+  name: 'createPlaylist',
   initialState,
   reducers: {
     createPlaylist: (state, action) => {
@@ -27,5 +27,5 @@ const playlistSlices = createSlice({
   },
 });
 
-export const {createPlaylist, addSongToPlaylist} = playlistSlices.actions;
-export default playlistSlices.reducer;
+export const {createPlaylist, addSongToPlaylist} = createPlaylistSlice.actions;
+export default createPlaylistSlice;
