@@ -4,7 +4,6 @@ import {persistor, store} from './src/components/reduxtolkit/store';
 import {PlayingProvider} from './src/components/context/PlayingContext';
 import {AppNavigator} from './src/components/navigation/AppNavigator';
 import {PersistGate} from 'redux-persist/integration/react';
-import CustomInfiniteScroll from './src/components/custom/CustomInfinitScroll';
 
 export default function App() {
   return (
