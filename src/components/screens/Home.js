@@ -9,14 +9,7 @@ import {
   RefreshControl,
   StatusBar,
 } from 'react-native';
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import Icon from 'react-native-vector-icons/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import axios from 'axios';
@@ -27,13 +20,7 @@ import Artist from '../custom/Artist';
 import Playing from '../custom/Playing';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Recommended} from '../custom/Recommended';
-import {
-  fetchArtists,
-  fetchFavoriteArtistTracks,
-  fetchFeaturedPlaylists,
-  fetchNewReleases,
-  fetchRecentlyPlayed,
-} from '../../db/musicDb';
+import {fetchArtists, fetchRecentlyPlayed} from '../../db/musicDb';
 import {PlayingContext} from '../context/PlayingContext';
 import NewSongCard from '../custom/NewSongCard';
 import BottomComponent from '../custom/BottomComponent';
