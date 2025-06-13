@@ -12,7 +12,6 @@ import {
 import React, {useCallback, useContext} from 'react';
 import {colors} from '../constants/color';
 import {font} from '../constants/font';
-import Icon from 'react-native-vector-icons/AntDesign';
 import LinearGradient from 'react-native-linear-gradient';
 import {PlayingContext} from '../context/PlayingContext';
 
